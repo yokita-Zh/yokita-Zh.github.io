@@ -3,17 +3,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>FMDB | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="FMDB
+如果直接使用sqlite3操作数据库（c/c++ API），操作麻烦，使用难度大，工作效率低。所以，在Objective-c中使用比较麻烦，下面是一个简单的基本查询：
+
+123456789101112131415sqlite3 *oldDatabase = nil;NSString *filePath = @&quot;/File/Path/For/Sqlite/Database&quot;;sqlite3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FMDB">
+<meta property="og:url" content="http://yoursite.com/2015/04/18/FMDB/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description">
+<meta property="og:description" content="FMDB
+如果直接使用sqlite3操作数据库（c/c++ API），操作麻烦，使用难度大，工作效率低。所以，在Objective-c中使用比较麻烦，下面是一个简单的基本查询：
+
+123456789101112131415sqlite3 *oldDatabase = nil;NSString *filePath = @&quot;/File/Path/For/Sqlite/Database&quot;;sqlite3">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description">
+<meta name="twitter:title" content="FMDB">
+<meta name="twitter:description" content="FMDB
+如果直接使用sqlite3操作数据库（c/c++ API），操作麻烦，使用难度大，工作效率低。所以，在Objective-c中使用比较麻烦，下面是一个简单的基本查询：
+
+123456789101112131415sqlite3 *oldDatabase = nil;NSString *filePath = @&quot;/File/Path/For/Sqlite/Database&quot;;sqlite3">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -59,9 +68,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-FMDB" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-FMDB" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/04/18/FMDB/" class="article-date">
   <time datetime="2015-04-18T12:30:34.000Z" itemprop="datePublished">2015-04-18</time>
@@ -74,8 +81,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/18/FMDB/">FMDB</a>
+    <h1 class="article-title" itemprop="name">
+      FMDB
     </h1>
   
 
@@ -159,117 +166,20 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-AFNetWorking" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/04/18/AFNetWorking/" class="article-date">
-  <time datetime="2015-04-18T12:00:06.000Z" itemprop="datePublished">2015-04-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/18/AFNetWorking/">AFNetWorking</a>
-    </h1>
+    <a href="/2015/04/18/AFNetWorking/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">AFNetWorking</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="AFNetworking">AFNetworking</h1><ol>
-<li>AFNetworking为什么存在</li>
-<li>AFNetworking的功能</li>
-</ol>
-<h1 id="AFNetworking之HTTP">AFNetworking之HTTP</h1><p><code>GET POST</code></p>
-<h1 id="AFNetworking功能封装">AFNetworking功能封装</h1><ul>
-<li>AFHTTPRequestOperation<blockquote>
-<p>AFHTTPRequestOperation is a subclass of AFURLConnectionOperation for requests using the HTTP or HTTPS protocols. It encapsulates the concept of acceptable status codes and content types, which determine the success or failure of a request. <code>Although AFHTTPRequestOperationManager is usually the best way to go about making requests, AFHTTPRequestOperation can be used by itself.</code></p>
-</blockquote>
-</li>
-</ul>
-<p><strong>GET with AFHTTPRequestOperation</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://example.com/resources/123.json"</span>];</span><br><span class="line"><span class="built_in">NSURLRequest</span> *request = [<span class="built_in">NSURLRequest</span> requestWithURL:URL];</span><br><span class="line">AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];</span><br><span class="line">op<span class="variable">.responseSerializer</span> = [AFJSONResponseSerializer serializer];</span><br><span class="line">[op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br><span class="line">[[<span class="built_in">NSOperationQueue</span> mainQueue] addOperation:op];</span><br></pre></td></tr></table></figure>
-<ul>
-<li>AFHTTPRequestOperationManager<blockquote>
-<p>AFHTTPRequestOperationManager encapsulates the common patterns of communicating with a web application over HTTP, including request creation, response serialization, network reachability monitoring, and security, as well as request operation management.</p>
-</blockquote>
-</li>
-</ul>
-<p><strong>GET Request</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">[manager GET:<span class="string">@"http://example.com/resources.json"</span> parameters:<span class="literal">nil</span> success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><strong>POST URL-Form-Encoded Request</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line"><span class="built_in">NSDictionary</span> *parameters = @&#123;<span class="string">@"foo"</span>: <span class="string">@"bar"</span>&#125;;</span><br><span class="line">[manager POST:<span class="string">@"http://example.com/resources.json"</span> parameters:parameters success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><strong>POST Multi-Part Request</strong></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">NSDictionary *parameters = @&#123;@<span class="string">"foo"</span>: @<span class="string">"bar"</span>&#125;;</span><br><span class="line">NSURL *filePath = [NSURL <span class="string">fileURLWithPath:</span>@<span class="string">"file://path/to/image.png"</span>];</span><br><span class="line">[manager <span class="string">POST:</span>@<span class="string">"http://example.com/resources.json"</span> <span class="string">parameters:</span>parameters <span class="string">constructingBodyWithBlock:</span>^(id&lt;AFMultipartFormData&gt; formData) &#123;</span><br><span class="line">    [formData <span class="string">appendPartWithFileURL:</span>filePath <span class="string">name:</span>@<span class="string">"image"</span> <span class="string">error:</span>nil];</span><br><span class="line">&#125; <span class="string">success:</span>^(AFHTTPRequestOperation *operation, id responseObject) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Success: %@"</span>, responseObject);</span><br><span class="line">&#125; <span class="string">failure:</span>^(AFHTTPRequestOperation *operation, NSError *error) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/04/18/AFNetWorking/" data-id="ci8n06zfy0002j1k61ecfq1u1" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
 
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/04/16/hello-world/" class="article-date">
-  <time datetime="2015-04-16T10:14:39.000Z" itemprop="datePublished">2015-04-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/16/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/04/16/hello-world/" data-id="ci8n06zf70000j1k6eolx18mb" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
 </section>
         
           <aside id="sidebar">
