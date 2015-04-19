@@ -65,10 +65,125 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-FMDB" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-使用新浪微博API" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/FMDB/" class="article-date">
-  <time datetime="2015-04-18T12:30:34.000Z" itemprop="datePublished">2015</time>
+    <a href="/2015/使用新浪微博API/" class="article-date">
+  <time datetime="2015-04-19T13:39:54.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="使用新浪微博API">使用新浪微博API</h2><hr>
+<ul>
+<li>首先才成为一名开发者，在网站open.weibo.com中注册</li>
+<li><p>创建一个应用项目，如果只是学习，不用吧所有信息的填完整，浪费时间。</p>
+<p>其中还是有几点需要注意的：</p>
+<figure class="highlight"><figcaption><span>ID ```这个是你项目中的Bundle ID要一致，鉴于此，我决定不会放图的我要放一个截图给大家看看</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![Alt text](./BoundleID.png)&#10;Bundle ID &#21487;&#20197;&#20462;&#25913;&#65292;&#22312;info&#37324;&#38754;&#12290;&#10;&#10;---&#10;#### &#20351;&#29992;&#23448;&#26041;SDK&#10;* 1.&#23548;&#20837;SDK&#21253;&#65292;&#36825;&#20010;&#21253;&#22312;&#26032;&#28010;&#30340;&#24320;&#25918;&#24179;&#21488;&#37324;&#33021;&#25214;&#21040;&#65292;&#20854;&#23454;&#36827;&#20837;&#26032;&#28010;&#24494;&#21338;&#30340;&#24320;&#21457;&#37324;&#38754;&#26377;&#24456;&#22810;&#25991;&#26723;&#65292;&#25353;&#30528;&#27493;&#39588;&#23601;&#33021;&#27880;&#20876;&#23436;&#25104;&#65292;&#32780;&#19988;&#23454;&#29616;&#19968;&#20123;&#21151;&#33021;&#65292;&#24403;&#28982;&#20855;&#20307;&#30340;&#32454;&#33410;&#36824;&#26159;&#35201;&#33258;&#24049;&#23454;&#29616;&#65292;&#19979;&#36733;&#22320;&#22336;&#65288;http://open.weibo.com/development&#65289;&#37324;&#38754;&#26377;&#65292;&#19979;&#26469;&#20043;&#21518;&#23601;&#37324;&#38754;&#26377;&#24456;&#22810;&#19996;&#35199;&#65292;&#21253;&#25324;&#20351;&#29992;&#35828;&#26126;&#65292;&#36824;&#26377;Demo&#65292;&#21517;&#23383;&#21483;&#65288;weibo_ios_sdk&#65289;&#30340;&#25991;&#20214;&#12290;&#10;* &#23439;&#23450;&#20041;&#10;&#10;      import &#34;WeiboSDK.h&#34;&#10;define kAppKey           @&#34;4244467607&#34;&#10;define kRedirectURI     @&#34;http://api.wei.bo.com/oauth2/default.html&#34;//&#36825;&#26159;&#22238;&#35843;&#22320;&#22336;&#65292;&#19968;&#33324;&#20351;&#29992;&#27880;&#20876;&#30340;&#26102;&#20505;&#32473;&#30340;&#40664;&#35748;&#30340;&#10;define kLoginSuccess  @&#34;kLoginSuccess&#34;&#10;define kWeiBoText @&#34;text&#34;&#10;&#10;&#10;---&#10;&#27880;&#20876;AppKey,AppDelegate.m&#20013;&#10;&#10;     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions &#123;  &#10;     // Override point for customization after application launch.  &#10;     [WeiboSDK enableDebugMode:YES];  &#10;     [WeiboSDK registerApp:kAppKey];  &#10;     return YES;  &#10;     &#125;  &#10;     &#10;&#37197;&#32622;&#24212;&#12132;&#29992;&#31243;&#24207;&#20195;&#29702;&#10;&#10;    #import &#34;QYAppDelegate.h&#34;  &#10;    @implementation QYAppDelegate  &#10;    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions  &#10;    - &#123;&#10;    // Override point for customization after application launch.&#10;    &#10;    [WeiboSDK enableDebugMode:YES];&#10;    [WeiboSDK registerApp:kAppKey];&#10;    &#10;    return YES;  &#10;    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>//通过URL启动应用时会被调用<br>-(BOOL)application:(UIApplication <em>)application openURL:(NSURL </em>)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{<br>    return [WeiboSDK handleOpenURL:url delegate:self];<br>}</p>
+<p>-(BOOL)application:(UIApplication <em>)application handleOpenURL:(NSURL </em>)url{<br>    return [WeiboSDK handleOpenURL:url delegate:self];<br>}<br>```<br>实现WeiboSDKDelegate,接受登陆成功的回调,在AppDelegate.m中</p>
+<pre><code>-(<span class="typename">void</span>)<span class="string">didReceiveWeiboResponse:</span>(WBBaseResponse *)response{
+<span class="keyword">if</span> ([response <span class="string">isKindOfClass:</span>[WBAuthorizeResponse <span class="class"><span class="keyword">class</span>]]) {</span>
+    WBAuthorizeResponse *autoResponse = (WBAuthorizeResponse *)response;
+    NSLog(@<span class="string">"%@"</span>, [autoResponse accessToken]);
+
+    self.accessToken = autoResponse.accessToken;
+}  
+ [[NSNotificationCenter defaultCenter]<span class="string">postNotificationName:</span>kloginsuccess <span class="string">object:</span>self.accessToken];      
+}（代码看着有点别扭，凑活看吧，第一次正经写）
+</code></pre><p>这里还用了<strong>通知中心</strong>,通知中心为了把<code>accessToken</code>存起来在另一个ViewController里面使用这是请求的时候返回的参数的其中一个，也是必选的参数想看参数的含义进入这个网站：<a href="http://open.weibo.com/wiki/2/statuses/home_timeline" target="_blank" rel="external">http://open.weibo.com/wiki/2/statuses/home_timeline</a></p>
+<hr>
+<h4 id="登陆操作,ViewController-m中">登陆操作,ViewController.m中</h4><pre><code>- (IBAction)login:(id)sender {
+WBAuthorizeRequest *<span class="built_in">request</span> = [WBAuthorizeRequest <span class="built_in">request</span>];
+<span class="built_in">request</span>.redirectURI = kRedirectURI;
+<span class="built_in">request</span>.scope = @<span class="string">"all"</span>;
+<span class="built_in">request</span>.userInfo = @{@<span class="string">"SSO_From"</span>: @<span class="string">"QYViewController"</span>};
+[WeiboSDK sendRequest:<span class="built_in">request</span>];  
+}
+</code></pre><p>登陆成功后,通知的接受,请求微博列表:</p>
+<pre><code>- (<span class="typename">void</span>)viewDidLoad  
+{
+[<span class="keyword">super</span> viewDidLoad];
+<span class="comment">// Do any additional setup after loading the view, typically from a nib.</span>
+
+[[NSNotificationCenter defaultCenter] <span class="string">addObserver:</span>self <span class="string">selector:</span><span class="annotation">@selector</span>(<span class="string">loginSuccess:</span>) <span class="string">name:</span>kloginsuccess <span class="string">object:</span>nil];  
+}  
+
+#pragma mark - action  
+ -(<span class="typename">void</span>)<span class="string">loginSuccess:</span>(NSNotification *)noti{
+<span class="comment">//请求的参数</span>
+NSString *accessToken = noti.object;
+
+<span class="comment">//请求的URL</span>
+NSString *urlString = @<span class="string">"https://api.weibo.com/2/statuses/home_timeline.json"</span>;
+[WBHttpRequest <span class="string">requestWithURL:</span>urlString <span class="string">httpMethod:</span>@<span class="string">"GET"</span> <span class="string">params:</span>@{@<span class="string">"access_token"</span>: accessToken} <span class="string">delegate:</span>self <span class="string">withTag:</span>nil]；    
+}
+</code></pre><p>接收微博的代理方法 &lt;\WBHttpRequestDelegate>(不会转义-。-)</p>
+<pre><code>-(<span class="type">void</span>)request:(<span class="type">WBHttpRequest</span> *)request didReceiveResponse:(<span class="type">NSURLResponse</span> *)response{
+<span class="type">NSLog</span>(@<span class="string">"%@"</span>, response);  
+}  
+-(<span class="type">void</span>)request:(<span class="type">WBHttpRequest</span> *)request didFinishLoadingWithResult:(<span class="type">NSString</span> *)<span class="literal">result</span>{
+<span class="type">NSLog</span>(@<span class="string">"%@"</span>, <span class="literal">result</span>);
+
+<span class="type">NSDictionary</span> * response = [<span class="type">NSJSONSerialization</span> <span class="type">JSONObjectWithData</span>:[<span class="literal">result</span> dataUsingEncoding:<span class="type">NSUTF8StringEncoding</span>] options:<span class="number">0</span> error:<span class="keyword">nil</span>];
+<span class="type">NSArray</span> *statusesArray = response[@<span class="string">"statuses"</span>];
+<span class="type">NSMutableArray</span> *resultArray = [<span class="type">NSMutableArray</span> arrayWithCapacity:statusesArray.count];
+
+<span class="keyword">for</span> (<span class="type">NSDictionary</span> *info <span class="keyword">in</span> statusesArray) {
+    <span class="type">QYStatus</span> *status = [<span class="type">QYStatus</span> statusWithInfo:info];//返回的字典转化为模型 
+
+    [resultArray addObject:status];
+}
+self.statuses = resultArray;
+
+[self.tableView reloadData];  
+}  
+-(<span class="type">void</span>)request:(<span class="type">WBHttpRequest</span> *)request didFailWithError:(<span class="type">NSError</span> *)error{  
+}
+</code></pre><p>/<em> <strong>三个方法哪个用着方便用哪个</strong></em>/，上面的模型类QYStatus，是为了接收微博的各个参数的模型类，虽然里面就写了一个属性text，下面是.h文件</p>
+<pre><code><span class="preprocessor">#import <span class="title">&lt;Foundation/Foundation.h&gt;</span>  </span>
+<span class="class"><span class="keyword">@interface</span> <span class="title">QYStatus</span> : <span class="title">NSObject</span>  </span>
+<span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">copy</span>)<span class="built_in">NSString</span> *text;  
++(instancetype)statusWithInfo:(<span class="built_in">NSDictionary</span> *)info;  
+<span class="keyword">@end</span>
+</code></pre><p> .m文件就实现了一下类方法用来接收这个微博的字典。然后上面的代理方法中直接就存到一个statuses的数组里了，以便下面的tablevie使用显示列表</p>
+<p>pragma table View delegate</p>
+<pre><code>-(<span class="built_in">NSInteger</span>)numberOfSectionsInTableView:(<span class="built_in">UITableView</span> *)tableView{
+<span class="keyword">return</span> <span class="number">1</span>;  
+}  
+-(<span class="built_in">NSInteger</span>)tableView:(<span class="built_in">UITableView</span> *)tableView numberOfRowsInSection:(<span class="built_in">NSInteger</span>)section{
+<span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.statuses</span><span class="variable">.count</span>;  
+}  
+-(<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath{
+<span class="built_in">UITableViewCell</span> *cell = [tableView dequeueReusableCellWithIdentifier:<span class="string">@"weibocell"</span> forIndexPath:indexPath];
+
+cell<span class="variable">.textLabel</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.statuses</span>[indexPath<span class="variable">.row</span>] text];<span class="comment">//取出类中属性的值</span>
+<span class="keyword">return</span> cell;  
+}
+</code></pre><p>然后就大功告成！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci8oi426x0000xwfyai7yl4dz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-AFNetWorking" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/AFNetWorking/" class="article-date">
+  <time datetime="2015-04-18T12:00:06.000Z" itemprop="datePublished">2015</time>
 </a>
     
   </div>
@@ -79,7 +194,113 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/FMDB/">FMDB</a>
+      <a class="article-title" href="/2015/AFNetWorking/">AFNetWorking</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="AFNetworking">AFNetworking</h1><ol>
+<li>AFNetworking为什么存在</li>
+<li>AFNetworking的功能</li>
+</ol>
+<h1 id="AFNetworking之HTTP">AFNetworking之HTTP</h1><p><code>GET POST</code></p>
+<h1 id="AFNetworking功能封装">AFNetworking功能封装</h1><ul>
+<li>AFHTTPRequestOperation<blockquote>
+<p>AFHTTPRequestOperation is a subclass of AFURLConnectionOperation for requests using the HTTP or HTTPS protocols. It encapsulates the concept of acceptable status codes and content types, which determine the success or failure of a request. <code>Although AFHTTPRequestOperationManager is usually the best way to go about making requests, AFHTTPRequestOperation can be used by itself.</code></p>
+</blockquote>
+</li>
+</ul>
+<p><strong>GET with AFHTTPRequestOperation</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://example.com/resources/123.json"</span>];</span><br><span class="line"><span class="built_in">NSURLRequest</span> *request = [<span class="built_in">NSURLRequest</span> requestWithURL:URL];</span><br><span class="line">AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];</span><br><span class="line">op<span class="variable">.responseSerializer</span> = [AFJSONResponseSerializer serializer];</span><br><span class="line">[op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br><span class="line">[[<span class="built_in">NSOperationQueue</span> mainQueue] addOperation:op];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>AFHTTPRequestOperationManager<blockquote>
+<p>AFHTTPRequestOperationManager encapsulates the common patterns of communicating with a web application over HTTP, including request creation, response serialization, network reachability monitoring, and security, as well as request operation management.</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>GET Request</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">[manager GET:<span class="string">@"http://example.com/resources.json"</span> parameters:<span class="literal">nil</span> success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><strong>POST URL-Form-Encoded Request</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line"><span class="built_in">NSDictionary</span> *parameters = @&#123;<span class="string">@"foo"</span>: <span class="string">@"bar"</span>&#125;;</span><br><span class="line">[manager POST:<span class="string">@"http://example.com/resources.json"</span> parameters:parameters success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><strong>POST Multi-Part Request</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">NSDictionary *parameters = @&#123;@<span class="string">"foo"</span>: @<span class="string">"bar"</span>&#125;;</span><br><span class="line">NSURL *filePath = [NSURL <span class="string">fileURLWithPath:</span>@<span class="string">"file://path/to/image.png"</span>];</span><br><span class="line">[manager <span class="string">POST:</span>@<span class="string">"http://example.com/resources.json"</span> <span class="string">parameters:</span>parameters <span class="string">constructingBodyWithBlock:</span>^(id&lt;AFMultipartFormData&gt; formData) &#123;</span><br><span class="line">    [formData <span class="string">appendPartWithFileURL:</span>filePath <span class="string">name:</span>@<span class="string">"image"</span> <span class="string">error:</span>nil];</span><br><span class="line">&#125; <span class="string">success:</span>^(AFHTTPRequestOperation *operation, id responseObject) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Success: %@"</span>, responseObject);</span><br><span class="line">&#125; <span class="string">failure:</span>^(AFHTTPRequestOperation *operation, NSError *error) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci8oi427q0004xwfymd2c3kv6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/hello-world/" class="article-date">
+  <time datetime="2015-04-16T10:14:39.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/hello-world/" data-id="ci8oi427m0001xwfyxul9gwqn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-FMDB" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/FMDB/" class="article-date">
+  <time datetime="2014-04-18T12:30:34.000Z" itemprop="datePublished">2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/FMDB/">FMDB</a>
     </h1>
   
 
@@ -157,113 +378,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FMDB/" data-id="ci8n184eu00027gk6x6xc5v9x" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-AFNetWorking" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/AFNetWorking/" class="article-date">
-  <time datetime="2015-04-18T12:00:06.000Z" itemprop="datePublished">2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/AFNetWorking/">AFNetWorking</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="AFNetworking">AFNetworking</h1><ol>
-<li>AFNetworking为什么存在</li>
-<li>AFNetworking的功能</li>
-</ol>
-<h1 id="AFNetworking之HTTP">AFNetworking之HTTP</h1><p><code>GET POST</code></p>
-<h1 id="AFNetworking功能封装">AFNetworking功能封装</h1><ul>
-<li>AFHTTPRequestOperation<blockquote>
-<p>AFHTTPRequestOperation is a subclass of AFURLConnectionOperation for requests using the HTTP or HTTPS protocols. It encapsulates the concept of acceptable status codes and content types, which determine the success or failure of a request. <code>Although AFHTTPRequestOperationManager is usually the best way to go about making requests, AFHTTPRequestOperation can be used by itself.</code></p>
-</blockquote>
-</li>
-</ul>
-<p><strong>GET with AFHTTPRequestOperation</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://example.com/resources/123.json"</span>];</span><br><span class="line"><span class="built_in">NSURLRequest</span> *request = [<span class="built_in">NSURLRequest</span> requestWithURL:URL];</span><br><span class="line">AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];</span><br><span class="line">op<span class="variable">.responseSerializer</span> = [AFJSONResponseSerializer serializer];</span><br><span class="line">[op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br><span class="line">[[<span class="built_in">NSOperationQueue</span> mainQueue] addOperation:op];</span><br></pre></td></tr></table></figure>
-<ul>
-<li>AFHTTPRequestOperationManager<blockquote>
-<p>AFHTTPRequestOperationManager encapsulates the common patterns of communicating with a web application over HTTP, including request creation, response serialization, network reachability monitoring, and security, as well as request operation management.</p>
-</blockquote>
-</li>
-</ul>
-<p><strong>GET Request</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">[manager GET:<span class="string">@"http://example.com/resources.json"</span> parameters:<span class="literal">nil</span> success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><strong>POST URL-Form-Encoded Request</strong></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line"><span class="built_in">NSDictionary</span> *parameters = @&#123;<span class="string">@"foo"</span>: <span class="string">@"bar"</span>&#125;;</span><br><span class="line">[manager POST:<span class="string">@"http://example.com/resources.json"</span> parameters:parameters success:^(AFHTTPRequestOperation *operation, <span class="keyword">id</span> responseObject) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"JSON: %@"</span>, responseObject);</span><br><span class="line">&#125; failure:^(AFHTTPRequestOperation *operation, <span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><strong>POST Multi-Part Request</strong></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];</span><br><span class="line">NSDictionary *parameters = @&#123;@<span class="string">"foo"</span>: @<span class="string">"bar"</span>&#125;;</span><br><span class="line">NSURL *filePath = [NSURL <span class="string">fileURLWithPath:</span>@<span class="string">"file://path/to/image.png"</span>];</span><br><span class="line">[manager <span class="string">POST:</span>@<span class="string">"http://example.com/resources.json"</span> <span class="string">parameters:</span>parameters <span class="string">constructingBodyWithBlock:</span>^(id&lt;AFMultipartFormData&gt; formData) &#123;</span><br><span class="line">    [formData <span class="string">appendPartWithFileURL:</span>filePath <span class="string">name:</span>@<span class="string">"image"</span> <span class="string">error:</span>nil];</span><br><span class="line">&#125; <span class="string">success:</span>^(AFHTTPRequestOperation *operation, id responseObject) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Success: %@"</span>, responseObject);</span><br><span class="line">&#125; <span class="string">failure:</span>^(AFHTTPRequestOperation *operation, NSError *error) &#123;</span><br><span class="line">    NSLog(@<span class="string">"Error: %@"</span>, error);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci8n184ew00037gk6fzw859bu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/hello-world/" class="article-date">
-  <time datetime="2015-04-16T10:14:39.000Z" itemprop="datePublished">2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/hello-world/" data-id="ci8n184dx00007gk6qwmzvafy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci8oi427p0003xwfyjow6uqfw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -276,7 +391,7 @@
     <article id="post-FmdbDemo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/1970/FmdbDemo/" class="article-date">
-  <time datetime="1970-01-01T00:00:02.015Z" itemprop="datePublished">1970</time>
+  <time datetime="1970-01-01T00:00:02.014Z" itemprop="datePublished">1970</time>
 </a>
     
   </div>
@@ -300,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/1970/FmdbDemo/" data-id="ci8n184em00017gk6pgs8liy7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/1970/FmdbDemo/" data-id="ci8oi427o0002xwfy01nefq8k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -325,7 +440,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">January 1970</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/1970/01/">January 1970</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -337,7 +452,7 @@
       <ul>
         
           <li>
-            <a href="/2015/FMDB/">FMDB</a>
+            <a href="/2015/使用新浪微博API/">(no title)</a>
           </li>
         
           <li>
@@ -346,6 +461,10 @@
         
           <li>
             <a href="/2015/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2014/FMDB/">FMDB</a>
           </li>
         
           <li>
