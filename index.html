@@ -116,7 +116,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci8pm6axk00046yfyopc4y4qy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci8pmbhvk0005agfy2kp49h4b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -155,7 +155,68 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci8pm6axh00026yfyo0xhfe4l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci8pmbhvh0003agfycausc1xs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-多媒体采集" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/多媒体采集/" class="article-date">
+  <time datetime="2015-02-10T08:25:02.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/多媒体采集/">多媒体采集</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="iOS媒体采集">iOS媒体采集</h1><h1 id="媒体采集">媒体采集</h1><p>媒体采集，在这个流程中，这里会存在几个对象：</p>
+<ul>
+<li>AVCaptureDevice。这里代表抽象的硬件设备。</li>
+<li>AVCaptureInput。这里代表输入设备（可以是它的子类），它配置抽象硬件设备的ports。</li>
+<li>AVCaptureOutput。它代表输出数据，管理着输出到一个movie或者图像。</li>
+<li>AVCaptureSession。它是input和output的桥梁。它协调着intput到output的数据传输。</li>
+</ul>
+<h2 id="上述对象的关系：">上述对象的关系：</h2><p>有很多Device的input，也有很多数据类型的Output，都通过一个Capture Session来控制进行传输。也即：CaptureDevice适配AVCaptureInput，通过Session来输入到AVCaptureOutput中。这样也就达到了从设备到文件等持久化传输的目的（如从相机设备采集图像到UIImage中）。</p>
+<p>特别注意，这里的关系是可以通过一个Capture Session来同时控制多个设备的输入和输出。</p>
+<p>那么存在一个问题了：视频输入(input)就对应视频的输出(output)，而音频输入就应对应音频的输出，因而需要建立对应的Connections，来各自连接它们。而这样的连接对象，是由AVCaptureSession来持有的，这个对象叫AVCaptureConnection。</p>
+<p>在一个AVCaptureConnection中，这里维持着对应的数据传输输入到数据输出的过程（detail过程）。这里，AVCaptureInput或其子类对象包含着各种input port，通过各种input port，我们的AVCaptureOutput可以获取到相应的数据。</p>
+<p>一个AVCaptureConnection可以控制input到output的数据传输。</p>
+<p>当使用addInput:或addOutput:,Connection在所有兼容的输入和输出之间自动形成。手动添Connection是在在添加一个输入或输出时没有形成连接的时候。</p>
+<h2 id="AVCaptureDevice">AVCaptureDevice</h2><p>InputDevice即是对硬件的抽象，一对一的。一个AVCaptureDevice对象，对应一个实际的硬件设备。</p>
+<p>那么显然，我们可以通过AVCaptureDevice的类方法devices或devicesWithMediaType去获取全部或局部设备列表。（当然也可以检测相应的设备是否可以使用，这里注意有设备抢占问题，当前是否可用）</p>
+<h2 id="CaptureInput的构建和添加到Session中的方法">CaptureInput的构建和添加到Session中的方法</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*创建并配置输入设备*/</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">AVCaptureDevice</span> *device = [<span class="built_in">AVCaptureDevice</span> defaultDeviceWithMediaType:<span class="built_in">AVMediaTypeVideo</span>];</span><br><span class="line"><span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">AVCaptureDeviceInput</span> *input = [<span class="built_in">AVCaptureDeviceInput</span> deviceInputWithDevice:device error:&amp;error];</span><br><span class="line"><span class="keyword">if</span> (error)&#123;</span><br><span class="line">	<span class="comment">//handle the failure.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加input到session的模式是(检查可否添加到session，然后根据情况添加或者不添加)：</span></span><br><span class="line"><span class="built_in">AVCaptureSession</span> *captureSession = &lt;<span class="preprocessor">#Get a capture session#&gt;;</span></span><br><span class="line"><span class="keyword">if</span> ([captureSession canAddInput:input]) &#123;</span><br><span class="line">	[captureSession addInput:captureDeviceInput];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="comment">//handle the failure.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="output的分类和使用">output的分类和使用</h2><p>什么类型的输出,决定了什么输出数据的类型。在ios中，分为MovieFile、VideoData、AudioFile、AudioData、StillImage和Metadata几种output，使用方式类似，只是范围不同。另外，它们都继承于AVCaptureOutput,其自身是抽象类。</p>
+<p>第一个是输出成movie文件，第二个适用于逐个Frame的处理，第三个适用于输出成声音文件，第四个适用于声音采集，第五个是still image(静态图像&lt;拍照&gt;)相关，最后一个用于输出元数据（面部识别、条码等）。</p>
+<p>他们的添加方式都是使用session的addOutput方法。</p>
+<h1 id="二维码的扫描的实现">二维码的扫描的实现</h1><h3 id="1-获得扫描设备：（摄像头）。">1.获得扫描设备：（摄像头）。</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVCaptureDevice</span> *device = [<span class="built_in">AVCaptureDevice</span> defaultDeviceWithMediaType:<span class="built_in">AVMediaTypeVideo</span>];</span><br></pre></td></tr></table></figure>
+<h3 id="2-生成连接设备和session的input。">2.生成连接设备和session的input。</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSError *<span class="keyword">error</span>;</span><br><span class="line">AVCaptureDeviceInput *<span class="keyword">input</span> = [AVCaptureDeviceInput deviceInputWithDevice:device <span class="keyword">error</span>:&amp;<span class="keyword">error</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">error</span>)&#123;</span><br><span class="line">    NSLog(@<span class="string">"%@"</span>, <span class="keyword">error</span>.localizedDescription);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-AVCaptureOutput。">3.AVCaptureOutput。</h3><p>在ios6之后，新增Output的实现类AVCaptureMetadataOutput。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVCaptureMetadataOutput</span> * output = [[<span class="built_in">AVCaptureMetadataOutput</span> alloc] init];</span><br><span class="line"><span class="built_in">dispatch_queue_t</span> dispatchQueue;</span><br><span class="line">dispatchQueue = dispatch_queue_create(<span class="string">"hellp"</span>, <span class="literal">NULL</span>);</span><br><span class="line">[output setMetadataObjectsDelegate:<span class="keyword">self</span> queue:dispatchQueue];</span><br></pre></td></tr></table></figure>
+<h3 id="4-AVCaptureSession。">4.AVCaptureSession。</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVCaptureSession</span> *session  = [[<span class="built_in">AVCaptureSession</span> alloc] init];</span><br><span class="line">[session addInput:input];</span><br><span class="line">[session addOutput:output];</span><br><span class="line"><span class="comment">//注意：设置AVMetadataMachineReadableCodeObject的可输出的元数据类型，一定要讲output添加到session中后，再设置；</span></span><br><span class="line">[output setMetadataObjectTypes:[<span class="built_in">NSArray</span> arrayWithObjects:</span><br><span class="line">                                                   <span class="built_in">AVMetadataObjectTypeEAN13Code</span>,</span><br><span class="line">                                                   <span class="built_in">AVMetadataObjectTypeCode39Code</span>,</span><br><span class="line">                                                   <span class="built_in">AVMetadataObjectTypeEAN8Code</span>,</span><br><span class="line">                                                   <span class="built_in">AVMetadataObjectTypeCode128Code</span>,</span><br><span class="line">                                                   <span class="built_in">AVMetadataObjectTypeQRCode</span>, <span class="literal">nil</span>]];</span><br></pre></td></tr></table></figure>
+<h3 id="5-AVCaptureVideoPreviewLayer,CALayer的子类,可以预览device扑捉的画面。">5.AVCaptureVideoPreviewLayer,CALayer的子类,可以预览device扑捉的画面。</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AVCaptureVideoPreviewLayer</span> *videoPreviewLayer = [[<span class="built_in">AVCaptureVideoPreviewLayer</span> alloc] initWithSession:_session];</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci8pmbhvf0001agfygkecdz1x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -205,7 +266,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci8pm6axg00016yfyisiyj4dh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci8pmbhvg0002agfygk9xbsos" class="article-share-link">Share</a>
       
       
     </footer>
@@ -337,7 +398,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci8pm6ax500006yfy01tfc779" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci8pmbhur0000agfy6o1js0ej" class="article-share-link">Share</a>
       
       
     </footer>
@@ -439,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci8pm6axj00036yfyqs7ftcyr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci8pmbhvj0004agfy3n52wkfd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -464,7 +525,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -484,15 +545,15 @@
           </li>
         
           <li>
+            <a href="/2015/多媒体采集/">多媒体采集</a>
+          </li>
+        
+          <li>
             <a href="/2015/使用新浪微博API/">使用新浪微博API</a>
           </li>
         
           <li>
             <a href="/2015/数据解析/">数据解析</a>
-          </li>
-        
-          <li>
-            <a href="/2014/FMDB/">FMDB</a>
           </li>
         
       </ul>
