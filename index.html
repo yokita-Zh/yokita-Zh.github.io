@@ -65,6 +65,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-微博项目之首页" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博项目之首页/" class="article-date">
+  <time datetime="2015-04-30T08:07:36.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/微博项目之首页/">微博项目之首页</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="微博-首页显示微博列表">微博-首页显示微博列表</h2><p>微博首页是浏览微博列表的页面，也是本次微博项目最主要的功能之一，下面列举一下涉及到的各种知识。 </p>
+<ul>
+<li>首先网络请求数据</li>
+</ul>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>从网络通过<span class="built_in">URL</span>获取数据，按微博开放平台说的方法获取，使用第三方库AFNetworking：AFHTTPRequestOperationManager使用GET方法获取。  </span><br><span class="line"><span class="number">2.</span>获取完数据保存进模型类中。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>模型类的设计  </li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">为了方便数据的使用，所以有了模型类，在这里要说的是具体设计几个模型类。</span><br><span class="line">在微博列表中要分析一下主要显示哪些内容一下是本人分析过后的每个参数列表：</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) UsersModel *user;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *source;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDate</span>  *created_at;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *text;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSArray</span> *pic_urls;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> reposts_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> comments_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> attitudes_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) StatusModel *reStatus;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>)<span class="built_in">NSString</span> *timeAgo;</span><br><span class="line">这里基本包含了微博列表中所有要显示的参数，对应的每个参数的属性列表。</span><br><span class="line">这里UsersModel又是另外一个用来保存用户信息的模型类。</span><br><span class="line">下面是UsersModel的属性列表：</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *userId;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *profile_image_url;</span><br><span class="line"></span><br><span class="line">注意观察我这里还写了一个UsersModel类型的属性reStatus，是转发微博的属性。</span><br><span class="line">转发微博所需要的各种参数也包含在UsersModel，所以没必要给转发微博在创造一个模型。</span><br><span class="line"></span><br><span class="line">在做初始化的工作，有的参数在赋值之前还要做一些处理才能得到我们想要的数据，比如微博中的发布时间，现在新浪微博的时间显示类型有刚刚，几分钟前，几小时前，最后是发布的时间，所以需要经过一些处理。还有就是时间的格式，用专门用来修改时间格式的方法。（<span class="built_in">NSDateFormatter</span>）</span><br></pre></td></tr></table></figure>
+<ul>
+<li>从本地获取数据  </li>
+</ul>
+<p>在没有网络的情况下，我们为了测试APP可以模拟数据从网络上获取，实际在本地获取已经准备好的数据，显示出来。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.找到bundle中存放数据的文件</span></span><br><span class="line"><span class="built_in">NSString</span> *filePath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@"statues"</span> ofType:<span class="literal">nil</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *contentStr = [<span class="built_in">NSString</span> stringWithContentsOfFile:filePath encoding:<span class="built_in">NSUTF8StringEncoding</span> error:<span class="literal">nil</span>];</span><br><span class="line"> <span class="comment">//2.转换成可以解析的格式</span></span><br><span class="line">    <span class="built_in">NSData</span> *statusData = [contentStr dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span> ];</span><br><span class="line">    <span class="comment">//解析JSON对象</span></span><br><span class="line">    <span class="built_in">NSDictionary</span> *statusDtic = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:statusData options:<span class="number">0</span> error:<span class="literal">nil</span>];</span><br><span class="line">    <span class="comment">//从返回结果中，取出微博列表</span></span><br><span class="line">    <span class="built_in">NSArray</span> *status = statusDtic[<span class="string">@"statuses"</span>];</span><br><span class="line">    <span class="comment">//可变数组，保存创建的model</span></span><br><span class="line">    <span class="built_in">NSMutableArray</span> *mutaStatusArray = [<span class="built_in">NSMutableArray</span> arrayWithCapacity:status<span class="variable">.count</span>];</span><br><span class="line">   <span class="comment">//每个数据一次绑定</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">NSDictionary</span> *staDitc <span class="keyword">in</span> status) &#123;</span><br><span class="line">        StatusModel *statusModel = [[StatusModel alloc] initWithDictionary:staDitc];</span><br><span class="line">        [mutaStatusArray addObject:statusModel];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci946mttv000206k6hag55q14" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-面试题" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/面试题/" class="article-date">
@@ -131,7 +180,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci93w062q0000h1k6fmrthicu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci946mtt7000006k6i0kt6465" class="article-share-link">Share</a>
       
       
     </footer>
@@ -192,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci93w063k0006h1k6ml0hjdw9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci946mtu3000706k60nf25tvm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -231,7 +280,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci93w063h0004h1k61hgonuox" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci946mtu0000506k6s6rxcvrl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -292,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci93w063e0002h1k6n86arwox" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci946mttx000306k6un0k933t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -342,7 +391,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci93w063g0003h1k68m3xr7oa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci946mtty000406k6wb17loze" class="article-share-link">Share</a>
       
       
     </footer>
@@ -474,7 +523,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci93w063d0001h1k6w5xdntfl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci946mttt000106k659bsy6bw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -576,7 +625,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci93w063i0005h1k6rinwa1sj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci946mtu1000606k6ggrv1c51" class="article-share-link">Share</a>
       
       
     </footer>
@@ -601,7 +650,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -611,6 +660,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/微博项目之首页/">微博项目之首页</a>
+          </li>
         
           <li>
             <a href="/2015/面试题/">面试题</a>
@@ -626,10 +679,6 @@
         
           <li>
             <a href="/2015/多媒体采集/">多媒体采集</a>
-          </li>
-        
-          <li>
-            <a href="/2015/使用新浪微博API/">使用新浪微博API</a>
           </li>
         
       </ul>
