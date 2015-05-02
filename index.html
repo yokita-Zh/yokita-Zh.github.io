@@ -99,18 +99,18 @@
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">为了方便数据的使用，所以有了模型类，在这里要说的是具体设计几个模型类。</span><br><span class="line">在微博列表中要分析一下主要显示哪些内容一下是本人分析过后的每个参数列表：</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) UsersModel *user;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *source;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSDate</span>  *created_at;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *text;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSArray</span> *pic_urls;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> reposts_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> comments_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>) <span class="built_in">NSInteger</span> attitudes_count;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) StatusModel *reStatus;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>)<span class="built_in">NSString</span> *timeAgo;</span><br><span class="line">这里基本包含了微博列表中所有要显示的参数，对应的每个参数的属性列表。</span><br><span class="line">这里UsersModel又是另外一个用来保存用户信息的模型类。</span><br><span class="line">下面是UsersModel的属性列表：</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *userId;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>)<span class="built_in">NSString</span> *profile_image_url;</span><br><span class="line"></span><br><span class="line">注意观察我这里还写了一个UsersModel类型的属性reStatus，是转发微博的属性。</span><br><span class="line">转发微博所需要的各种参数也包含在UsersModel，所以没必要给转发微博在创造一个模型。</span><br><span class="line"></span><br><span class="line">在做初始化的工作，有的参数在赋值之前还要做一些处理才能得到我们想要的数据，比如微博中的发布时间，现在新浪微博的时间显示类型有刚刚，几分钟前，几小时前，最后是发布的时间，所以需要经过一些处理。还有就是时间的格式，用专门用来修改时间格式的方法。（<span class="built_in">NSDateFormatter</span>）</span><br><span class="line"></span><br><span class="line">```  </span><br><span class="line">在微博模型中还要判断是否有转发的微博如果有就在走一次绑定数据的方法，可怜的我竟然给微博模型传错了数据，找了半天的错，好几个字典，一定要把名字写清楚点啊。。</span><br></pre></td></tr></table></figure>
 <p> //根据有无转发微博，创建微博对象<br>        NSDictionary *reStusts = statusInfo[kStatusRetweetStatus];<br>        if (reStusts) {<br>            self.reStatus = [[StatusModel alloc] initWithDictionary:reStusts];</p>
 <pre><code>}
-</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模型类中还有一个模型没有提到，就是专门用来存放登录时参数的模型：</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">模型类中还有一个模型没有提到，就是专门用来存放登录时参数的模型：</span><br></pre></td></tr></table></figure>
 <p>@interface Accounts : NSObject<nscoding><br>@property (nonatomic, copy) NSString <em>accessToken;//Oauth<br>@property (nonatomic, copy) NSString </em>sinaId;//id<br>@property (nonatomic, copy) NSDate *loseEfficacy;//失效时间<br>//使用单例是因为，只初始化一个对象就足够了，因为每次只能有一个账户登录<br>+(instancetype)accountModel;</nscoding></p>
 <p>//设置登录信息<br>-(void)loginSucess:(NSDictionary *)loginInfo;<br>//退出登录<br>-(void)logOut;<br>//判断是否登录成功<br>-(BOOL)isLogin;</p>
 <p>//构造用于网络请求的字典<br>-(NSMutableDictionary *)requestParamaters;</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">可以看出这个模型是遵循NSCoding协议的原因是我们要把参数存下来保存在物理文件中，因为应用退出后就不在内存中了，对于数据持久化有好几种方法，下面列举一下：</span><br><span class="line">    </span><br><span class="line">    -<span class="ruby">plist属性表（<span class="constant">NSUserDefault</span>）</span><br><span class="line"></span>    -<span class="ruby">解档归档</span><br><span class="line"></span>    -<span class="ruby">数据库  </span><br><span class="line"></span>    </span><br><span class="line"> 使用解档归档的原因是plist只能存储基本类型的数据，我们要存得数据类型都不是基本类型，所以不能使用，而对象归档其实就是把数据转化成能存储的二进制数据，然后保存起来，要使用的时候就在把它解码就可以使用了。  </span><br><span class="line">如果使用数据库就是大材小用了，因为我们只需要存一些很少的参数，然后能取出来用，不需要查询这些其他的用途。  </span><br><span class="line"> 解档归档：</span><br><span class="line">`NSCoding协议的两个方法`</span><br></pre></td></tr></table></figure>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">可以看出这个模型是遵循NSCoding协议的原因是我们要把参数存下来保存在物理文件中，因为应用退出后就不在内存中了，对于数据持久化有好几种方法，下面列举一下：  </span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    -<span class="ruby">plist属性表（<span class="constant">NSUserDefault</span>）</span><br><span class="line"></span>    -<span class="ruby">解档归档</span><br><span class="line"></span>    -<span class="ruby">数据库  </span><br><span class="line"></span>      </span><br><span class="line">      </span><br><span class="line"> 使用解档归档的原因是plist只能存储基本类型的数据，我们要存得数据类型都不是基本类型，所以不能使用，而对象归档其实就是把数据转化成能存储的二进制数据，然后保存起来，要使用的时候就在把它解码就可以使用了。  </span><br><span class="line">如果使用数据库就是大材小用了，因为我们只需要存一些很少的参数，然后能取出来用，不需要查询这些其他的用途。  </span><br><span class="line"> 解档归档：</span><br><span class="line">`NSCoding协议的两个方法`</span><br></pre></td></tr></table></figure>
 <p>//解档<br>-(id)initWithCoder:(NSCoder <em>)aDecoder<br>//归档<br>-(void)encodeWithCoder:(NSCoder </em>)aCoder<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"><span class="comment">* 从本地获取数据  </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">在没有网络的情况下，我们为了测试<span class="keyword">APP</span>可以模拟数据从网络上获取，实际在本地获取已经准备好的数据，显示出来。</span><br></pre></td></tr></table></figure></p>
 <p>//1.找到bundle中存放数据的文件<br>NSString <em>filePath = [[NSBundle mainBundle] pathForResource:@”statues” ofType:nil];<br>    NSString </em>contentStr = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];<br> //2.转换成可以解析的格式<br>    NSData <em>statusData = [contentStr dataUsingEncoding:NSUTF8StringEncoding ];<br>    //解析JSON对象<br>    NSDictionary </em>statusDtic = [NSJSONSerialization JSONObjectWithData:statusData options:0 error:nil];<br>    //从返回结果中，取出微博列表<br>    NSArray <em>status = statusDtic[@”statuses”];<br>    //可变数组，保存创建的model<br>    NSMutableArray </em>mutaStatusArray = [NSMutableArray arrayWithCapacity:status.count];<br>   //每个数据一次绑定<br>    for (NSDictionary <em>staDitc in status) {<br>        StatusModel </em>statusModel = [[StatusModel alloc] initWithDictionary:staDitc];<br>        [mutaStatusArray addObject:statusModel];<br>    }<br>```</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci96n2pvo0002w2k6xzczhi5c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci96n68aq0002ylk60or6xag0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -186,7 +186,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci96n2pvc0000w2k637y4436j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci96n68a60000ylk6nlz4k0n7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,7 +247,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci96n2pvv0007w2k635bgcxqq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci96n68aw0007ylk6b327bpmv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -286,7 +286,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci96n2pvs0005w2k64tteom2c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci96n68at0005ylk61e385x3d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -347,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci96n2pvq0003w2k6beudir09" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci96n68ar0003ylk6rs51z8aa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -397,7 +397,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci96n2pvr0004w2k69j3uv0ti" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci96n68as0004ylk6pu4c2ft3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -529,7 +529,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci96n2pvm0001w2k6c26wxvnx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci96n68ao0001ylk65vwawzdr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -631,7 +631,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci96n2pvu0006w2k6l6vto3ed" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci96n68av0006ylk6c5sru9jh" class="article-share-link">Share</a>
       
       
     </footer>
