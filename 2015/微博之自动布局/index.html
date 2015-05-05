@@ -15,6 +15,7 @@
 <meta property="og:image" content="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7wmifj20i0070aaf.jpg =250x">
 <meta property="og:image" content="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7gbcej20ek05mmxe.jpg =250x">
 <meta property="og:image" content="http://ww1.sinaimg.cn/small/919f5105jw1ertn6mht4tj20ek06m3zq.jpg =250x">
+<meta property="og:image" content="http://25.io/mou/Mou_128.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微博之自动布局">
 <meta name="twitter:description" content="自动布局在微博的首页显示中，每条微博是一个cell，每条微博的cell的高度都不是确定的，因为每条微博的内容都是不一样的有大有小，所以想要cell的大小随文字的多少显示就需要动态布局，计算出cell的高度，之前发过有关动态计算cell高度的博文，这次值针对于微博的项目来演示如何动态的显示出博客的内容。动态计算高度有两种：一种是手动计算，一种是使用autoLayout。本次微博使用的是autoLay">
@@ -112,12 +113,12 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
 <span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>];
 <span class="keyword">return</span> size<span class="variable">.height</span> + <span class="number">1</span>;  
 }  
-</code></pre><p>  <code>这时得注意这个最后加个1是微博的线的高度，如果没有就显示不全</code><br>  如果有错误提示是高度一直为0 有可能是约束加的不对，还有上面说的勾选的内容勾选的不对。反正看着简单，做起来也需要很细心才行。</p>
+</code></pre><p>  <code>这时得注意这个最后加个1是微博的线的高度，如果没有就显示不全</code><br>  如果有错误提示是高度一直为0 有可能是约束加的不对，还有上面说的勾选的内容勾选的不对。反正看着简单，做起来也需要很细心才行。<br>  <img src="http://25.io/mou/Mou_128.png" alt="Mou icon"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="ci9bams0h0003xsk6t8cox7dd" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="ci9bazai300034hk6x6napge1" class="article-share-link">Share</a>
       
       
     </footer>
