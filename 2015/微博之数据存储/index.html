@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>YoKi’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: “微博之数据存储”date: 2015-05-03 17:44:04
+tags:微博-数据库关于微博的数据存储问题，又是数据持久化，首先是我们网络请求的数据要存到物理文件内，原因是微博在登录之后不刷新或者不登陆打开后，还有上次更新过的微博出现，而这些数据是不通过网络请求过来的，而且也不能放在内存中如果放到内存中不放到本地，程序退出后数据就会消失。所以在现实微博界面需要用到数据持久化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YoKi’s Blog">
+<meta property="og:url" content="http://yoursite.com/2015/微博之数据存储/index.html">
+<meta property="og:site_name" content="YoKi’s Blog">
+<meta property="og:description" content="title: “微博之数据存储”date: 2015-05-03 17:44:04
+tags:微博-数据库关于微博的数据存储问题，又是数据持久化，首先是我们网络请求的数据要存到物理文件内，原因是微博在登录之后不刷新或者不登陆打开后，还有上次更新过的微博出现，而这些数据是不通过网络请求过来的，而且也不能放在内存中如果放到内存中不放到本地，程序退出后数据就会消失。所以在现实微博界面需要用到数据持久化。">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="YoKi’s Blog">
+<meta name="twitter:description" content="title: “微博之数据存储”date: 2015-05-03 17:44:04
+tags:微博-数据库关于微博的数据存储问题，又是数据持久化，首先是我们网络请求的数据要存到物理文件内，原因是微博在登录之后不刷新或者不登陆打开后，还有上次更新过的微博出现，而这些数据是不通过网络请求过来的，而且也不能放在内存中如果放到内存中不放到本地，程序退出后数据就会消失。所以在现实微博界面需要用到数据持久化。">
+  
+    <link rel="alternative" href="/atom.xml" title="YoKi’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">YoKi’s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">多少事从来急，天地转，光阴迫，一万年太久，只争朝夕。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="q" value="site:http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-微博之数据存储" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博之数据存储/" class="article-date">
+  <time datetime="2015-05-04T02:14:56.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: “微博之数据存储”<br>date: 2015-05-03 17:44:04</p>
+<h2 id="tags:">tags:</h2><h3 id="微博-数据库">微博-数据库</h3><p>关于微博的数据存储问题，又是数据持久化，首先是我们网络请求的数据要存到物理文件内，原因是微博在登录之后不刷新或者不登陆打开后，还有上次更新过的微博出现，而这些数据是不通过网络请求过来的，而且也不能放在内存中如果放到内存中不放到本地，程序退出后数据就会消失。<br>所以在现实微博界面需要用到数据持久化。下面分析一下用哪种方法：  </p>
+<ul>
+<li>plist</li>
+<li>解档归档</li>
+<li>userDefault</li>
+<li><p>sqlit3</p>
+<p>选择plist可以使实现，原因是我们存储的数据并不是很多，实现起来也很方便，是一种好的选择。每次都只存前二十条数据。<br>选择解档归档也是可以的。<br>userDefault不能用，数据格式不是基本类型的。<br>选择数据库也可以，最后我们选择使用数据库实现。  原因是plist还有有局限性，查询起来又是有些不方便。</p>
+</li>
+</ul>
+<hr>
+<h3 id="数据库的设计">数据库的设计</h3><ol>
+<li><p>创建表  </p>
+<ul>
+<li><p>表的个数<br>对于创建几个表需要好好讨论一下，首先我们可以根据创建的模型来创建表，但是好像这样关会很复杂，再者说说具体一条微博中有几个部分：<br>1.微博  2.转发微博 3.用户信息<br>其实着三部分细分一下可以看出，一条微博和转发微博里面的字段是重复的，没必要单独出来，比如转发的微博中又用户信息，普通微博的字段包含转发微博的所有信息。再者是否现在要建立两个表，一个存微博一个存用户的信息。而且转发的微博并不需要修改但是外层的微博有可能会修改。其实总体来说用一个表就够了。外层是个字典普通字段就是个键，其他写成二进制存进去。</p>
+</li>
+<li><p>什么时候创建<br>有两种方式：1.在项目中直接创建数据库2.先创建数据库，放到mainbundle中，然后再copy到document中。这里选择第二种方式的原因是提前需要配置一些默认的参数。</p>
+</li>
+<li>字段的类型<br>前面说过这个一条微博是一个字典，一条微博中有很多参数，每个参数可以作为数据库中的一个字段，但是用户信息的参数又是一个字典，还有转发微博也是一个字典，所以可以像图片的存储那样转换成data类型存起来。这里要用到的方法就是把字典归档。<code>archivedDataWithRootObject:</code></li>
+</ul>
+</li>
+<li></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博之数据存储/" data-id="ci9bakso00004vvk610hmg2z5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/微博项目之首页/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">微博项目之首页</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/微博之数据存储/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2015/微博项目之首页/">微博项目之首页</a>
+          </li>
+        
+          <li>
+            <a href="/2015/面试题/">面试题</a>
+          </li>
+        
+          <li>
+            <a href="/2015/AFNetWorking/">AFNetWorking</a>
+          </li>
+        
+          <li>
+            <a href="/2015/FmdbDemo/">FmdbDemo</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Yokita<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

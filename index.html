@@ -65,6 +65,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-微博之数据存储" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博之数据存储/" class="article-date">
+  <time datetime="2015-05-04T02:14:56.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: “微博之数据存储”<br>date: 2015-05-03 17:44:04</p>
+<h2 id="tags:">tags:</h2><h3 id="微博-数据库">微博-数据库</h3><p>关于微博的数据存储问题，又是数据持久化，首先是我们网络请求的数据要存到物理文件内，原因是微博在登录之后不刷新或者不登陆打开后，还有上次更新过的微博出现，而这些数据是不通过网络请求过来的，而且也不能放在内存中如果放到内存中不放到本地，程序退出后数据就会消失。<br>所以在现实微博界面需要用到数据持久化。下面分析一下用哪种方法：  </p>
+<ul>
+<li>plist</li>
+<li>解档归档</li>
+<li>userDefault</li>
+<li><p>sqlit3</p>
+<p>选择plist可以使实现，原因是我们存储的数据并不是很多，实现起来也很方便，是一种好的选择。每次都只存前二十条数据。<br>选择解档归档也是可以的。<br>userDefault不能用，数据格式不是基本类型的。<br>选择数据库也可以，最后我们选择使用数据库实现。  原因是plist还有有局限性，查询起来又是有些不方便。</p>
+</li>
+</ul>
+<hr>
+<h3 id="数据库的设计">数据库的设计</h3><ol>
+<li><p>创建表  </p>
+<ul>
+<li><p>表的个数<br>对于创建几个表需要好好讨论一下，首先我们可以根据创建的模型来创建表，但是好像这样关会很复杂，再者说说具体一条微博中有几个部分：<br>1.微博  2.转发微博 3.用户信息<br>其实着三部分细分一下可以看出，一条微博和转发微博里面的字段是重复的，没必要单独出来，比如转发的微博中又用户信息，普通微博的字段包含转发微博的所有信息。再者是否现在要建立两个表，一个存微博一个存用户的信息。而且转发的微博并不需要修改但是外层的微博有可能会修改。其实总体来说用一个表就够了。外层是个字典普通字段就是个键，其他写成二进制存进去。</p>
+</li>
+<li><p>什么时候创建<br>有两种方式：1.在项目中直接创建数据库2.先创建数据库，放到mainbundle中，然后再copy到document中。这里选择第二种方式的原因是提前需要配置一些默认的参数。</p>
+</li>
+<li>字段的类型<br>前面说过这个一条微博是一个字典，一条微博中有很多参数，每个参数可以作为数据库中的一个字段，但是用户信息的参数又是一个字典，还有转发微博也是一个字典，所以可以像图片的存储那样转换成data类型存起来。这里要用到的方法就是把字典归档。<code>archivedDataWithRootObject:</code></li>
+</ul>
+</li>
+<li></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博之数据存储/" data-id="ci9bakso00004vvk610hmg2z5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-微博项目之首页" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/微博项目之首页/" class="article-date">
@@ -110,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci96n68aq0002ylk60or6xag0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci9baksnx0002vvk6i84g08r1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -186,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci96n68a60000ylk6nlz4k0n7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci9baksnc0000vvk6sxivy78e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,7 +296,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci96n68aw0007ylk6b327bpmv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci9baksoa000avvk6p674rl92" class="article-share-link">Share</a>
       
       
     </footer>
@@ -286,7 +335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci96n68at0005ylk61e385x3d" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci9bakso60008vvk6426fuple" class="article-share-link">Share</a>
       
       
     </footer>
@@ -347,7 +396,67 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci96n68ar0003ylk6rs51z8aa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci9bakso10005vvk6bqp96d57" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-微博之自动布局" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博之自动布局/" class="article-date">
+  <time datetime="2015-02-04T02:53:34.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/微博之自动布局/">微博之自动布局</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="自动布局">自动布局</h3><p>在微博的首页显示中，每条微博是一个cell，每条微博的cell的高度都不是确定的，因为每条微博的内容都是不一样的有大有小，所以想要cell的大小随文字的多少显示就需要动态布局，计算出cell的高度，之前发过有关动态计算cell高度的博文，这次值针对于微博的项目来演示如何动态的显示出博客的内容。<br>动态计算高度有两种：一种是手动计算，一种是使用autoLayout。本次微博使用的是autoLayout自动计算高度，相对简单一些。下面是计算的步骤。  </p>
+<ul>
+<li><p>首先按照微博的格式把该添加的控件添加上。  </p>
+<p>  <img src="http://ww2.sinaimg.cn/mw690/919f5105jw1ertmu898c4j20hu09amxl.jpg =250x" alt="Mou icon">  </p>
+<ul>
+<li><p>逐个加上对应的约束<br><img src="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7wmifj20i0070aaf.jpg =250x" alt="Mou icon"><br><code>这里需要注意的是要把整个cell撑起来，垂直方向要加够约束，约束与约束的关系要清晰</code><br>由于xcode的版本有些不同加完约束后还有勾选一下内容：<br><img src="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7gbcej20ek05mmxe.jpg =250x" alt="Mou icon">      </p>
+<p>还有：  </p>
+<p><img src="http://ww1.sinaimg.cn/small/919f5105jw1ertn6mht4tj20ek06m3zq.jpg =250x" alt="Mou icon"> <code>我的xcode6.1.1默认是两个都勾选，只需要勾选第一个</code>  </p>
+</li>
+</ul>
+<p>界面的内容就完成了，下面进入对应的控制器添加上代码。  </p>
+<ul>
+<li>计算cell高度的算法</li>
+</ul>
+</li>
+</ul>
+<pre><code> -(<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath{
+StatusCell *cell =  <span class="keyword">self</span><span class="variable">.proptCell</span>;
+StatusModel *models = <span class="keyword">self</span><span class="variable">.arraySt</span>[indexPath<span class="variable">.section</span>];
+[cell setStatueseModel:models];
+<span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>];
+<span class="keyword">return</span> size<span class="variable">.height</span> + <span class="number">1</span>;  
+}  
+</code></pre><p>  <code>这时得注意这个最后加个1是微博的线的高度，如果没有就显示不全</code><br>  如果有错误提示是高度一直为0 有可能是约束加的不对，还有上面说的勾选的内容勾选的不对。反正看着简单，做起来也需要很细心才行。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="ci9baksny0003vvk6h3shk5o0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -397,7 +506,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci96n68as0004ylk6pu4c2ft3" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci9bakso40007vvk656k9qij0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -529,7 +638,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci96n68ao0001ylk65vwawzdr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci9baksnw0001vvk62kdmvu40" class="article-share-link">Share</a>
       
       
     </footer>
@@ -539,10 +648,10 @@
 
 
   
-    <article id="post-FMDB" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-动态计算cell高度" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/FMDB/" class="article-date">
-  <time datetime="2014-04-18T12:30:34.000Z" itemprop="datePublished">2014</time>
+    <a href="/2015/动态计算cell高度/" class="article-date">
+  <time datetime="2015-01-02T02:57:19.000Z" itemprop="datePublished">2015</time>
 </a>
     
   </div>
@@ -553,7 +662,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/FMDB/">FMDB</a>
+      <a class="article-title" href="/2015/动态计算cell高度/">动态计算cell高度</a>
     </h1>
   
 
@@ -561,77 +670,53 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="FMDB">FMDB</h1><blockquote>
-<p>如果直接使用sqlite3操作数据库（c/c++ API），操作麻烦，使用难度大，工作效率低。所以，在Objective-c中使用比较麻烦，下面是一个简单的基本查询：</p>
-</blockquote>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">sqlite3 *oldDatabase = <span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">NSString</span> *filePath = <span class="string">@"/File/Path/For/Sqlite/Database"</span>;</span><br><span class="line">sqlite3_open([filePath UTF8String], &amp;oldDatabase);</span><br><span class="line">sqlite3_stmt* statement = <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* sqlQuery = <span class="string">"SELECT NAME FROM TABLENAME"</span>;</span><br><span class="line"><span class="keyword">if</span> (sqlite3_prepare_v2(oldDatabase, sqlQuery, -<span class="number">1</span>, &amp;statement, <span class="literal">NULL</span>) == SQLITE_OK)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">while</span> (sqlite3_step(statement) == SQLITE_ROW) <span class="comment">// get row one by one</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span>* zdatabaseName = sqlite3_column_text(statement, <span class="number">0</span>);</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%s %s"</span>, __FUNCTION__, zdatabaseName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">sqlite3_finalize(statement);</span><br><span class="line">sqlite3_close(oldDatabase);</span><br></pre></td></tr></table></figure>
+        <h1 id="动态计算UITableViewCell高度">动态计算UITableViewCell高度</h1><h2 id="UILabel_in_UITableViewCell">UILabel in UITableViewCell</h2><h3 id="Auto_Layout">Auto Layout</h3><ul>
+<li><p>UILabel的属性Lines设为了0表示显示多行。Auto Layout约束一定要建立完完整</p>
+</li>
+<li><p>UITableView使用C1.xib中自定义的Cell,那么我们需要向UITableView进行注册</p>
+</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UINib *cellNib = [UINib <span class="string">nibWithNibName:</span>@<span class="string">"C1"</span> <span class="string">bundle:</span>nil]; </span><br><span class="line">[self.tableView <span class="string">registerNib:</span>cellNib <span class="string">forCellReuseIdentifier:</span>@<span class="string">"C1"</span>];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据源方法</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSInteger</span>)tableView:(<span class="built_in">UITableView</span> *)tableView numberOfRowsInSection:(<span class="built_in">NSInteger</span>)section </span><br><span class="line">&#123; </span><br><span class="line">    <span class="comment">// Return the number of rows in the section. </span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.tableData</span><span class="variable">.count</span>; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C1 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C1"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>需要用到一个新的API systemLayoutSizeFittingSize:来计算UITableViewCell所占空间高度。Cell的高度是在- (CGFloat)tableView:(UITableView )tableView heightForRowAtIndexPath:(NSIndexPath )indexPath这个UITableViewDelegate的方法里面传给UITableView的。</p>
+</li>
+<li><p>这里有一个需要特别注意的问题，也就是<code>效率</code>问题。UITableView是一次性计算完所有Cell的高度，如果有1W个Cell，那么- (CGFloat)tableView:(UITableView )tableView heightForRowAtIndexPath:(NSIndexPath )indexPath就会触发1W次，然后才显示内容。不过在iOS7以后，提供了一个新方法可以避免这1W次调用，它就是- (CGFloat)tableView:(UITableView )tableView estimatedHeightForRowAtIndexPath:(NSIndexPath )indexPath。要求返回一个Cell的估计值，实现了这个方法，那只有显示的Cell才会触发计算高度的protocol. 由于systemLayoutSizeFittingSize需要cell的一个实例才能计算，所以这儿用一个成员变量存一个Cell的实列，这样就不需要每次计算Cell高度的时候去动态生成一个Cell实例，这样即方便也高效也少用内存，可谓一举三得。</p>
+</li>
+<li>声明一个存计算Cell高度的实例变量</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UITableViewCell</span> *prototypeCell;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化prototypeCell</li>
+</ul>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">self</span>.prototypeCell  = [<span class="literal">self</span>.<span class="built_in">table</span>View dequeueReusableCellWithIdentifier:@<span class="string">"C1"</span>];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>计算Cell高度的实现</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C1 *cell = (C1 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>]; </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, size<span class="variable">.height</span> + <span class="number">1</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + size<span class="variable">.height</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>UITableViewCell的高度要比它的contentView要高1,也就是它的分隔线的高度</li>
+</ul>
+<h3 id="Manual_Layout">Manual Layout</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C3 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C3"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    [cell<span class="variable">.t</span> sizeToFit]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C3 *cell = (C3 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    <span class="built_in">NSString</span> *str = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = str; </span><br><span class="line">    <span class="built_in">CGSize</span> s = [str calculateSize:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX) font:cell<span class="variable">.t</span><span class="variable">.font</span>]; </span><br><span class="line">    <span class="built_in">CGFloat</span> defaultHeight = cell<span class="variable">.contentView</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.height</span>; </span><br><span class="line">    <span class="built_in">CGFloat</span> height = s<span class="variable">.height</span> &gt; defaultHeight ? s<span class="variable">.height</span> : defaultHeight; </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, height); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + height; </span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// NSString的类别</span></span><br><span class="line">- (<span class="built_in">CGSize</span>)calculateSize:(<span class="built_in">CGSize</span>)size font:(<span class="built_in">UIFont</span> *)font &#123; </span><br><span class="line">    <span class="built_in">CGSize</span> expectedLabelSize = <span class="built_in">CGSizeZero</span>; </span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> ([[[<span class="built_in">UIDevice</span> currentDevice] systemVersion] floatValue] &gt;= <span class="number">7</span>) &#123; </span><br><span class="line">        <span class="built_in">NSMutableParagraphStyle</span> *paragraphStyle = [[<span class="built_in">NSMutableParagraphStyle</span> alloc] init]; </span><br><span class="line">        paragraphStyle<span class="variable">.lineBreakMode</span> = <span class="built_in">NSLineBreakByWordWrapping</span>; </span><br><span class="line">        <span class="built_in">NSDictionary</span> *attributes = @&#123;<span class="built_in">NSFontAttributeName</span>:font, <span class="built_in">NSParagraphStyleAttributeName</span>:paragraphStyle<span class="variable">.copy</span>&#125;; </span><br><span class="line">         </span><br><span class="line">        expectedLabelSize = [<span class="keyword">self</span> boundingRectWithSize:size options:<span class="built_in">NSStringDrawingUsesLineFragmentOrigin</span> attributes:attributes context:<span class="literal">nil</span>]<span class="variable">.size</span>; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">        expectedLabelSize = [<span class="keyword">self</span> sizeWithFont:font </span><br><span class="line">                                       constrainedToSize:size </span><br><span class="line">                                           lineBreakMode:<span class="built_in">NSLineBreakByWordWrapping</span>]; </span><br><span class="line">    &#125; </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGSizeMake</span>(ceil(expectedLabelSize<span class="variable">.width</span>), ceil(expectedLabelSize<span class="variable">.height</span>)); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="UITextView_in_UITableViewCell">UITextView in UITableViewCell</h2><h3 id="Auto_Layout-1">Auto Layout</h3><ul>
+<li>计算高度的代码</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C2 *cell = (C2 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> textViewSize = [cell<span class="variable">.t</span> sizeThatFits:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX)]; </span><br><span class="line">    <span class="built_in">CGFloat</span> h = size<span class="variable">.height</span> + textViewSize<span class="variable">.height</span>; </span><br><span class="line">    h = h &gt; <span class="number">89</span> ? h : <span class="number">89</span>;  <span class="comment">//89是图片显示的最低高度， 见xib </span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, h); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> + h; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>而FMDB数据库操作类对sqlite3的操作进行了便利地封装并保证了多线程下安全地操作数据库</p>
+<p><code>说明：</code>通过sizeThatFits:计算的UITextView的高度(这是计算UITextView内容全部显示时的方法)，然后加上systemLayoutSizeFittingSize:返回的高度。为什么要这样呢？ 因为UITextView内容的高度不会影响systemLayoutSizeFittingSize计算。</p>
 </blockquote>
-<p>FMDB有三个主要的类</p>
-<p>1.FMDatabase – 表示一个单独的SQLite数据库，用来执行SQLite的命令</p>
-<p>2.FMResultSet – 表示FMDatabase执行查询后的结果集</p>
-<p>3.FMDatabaseQueue – 如果你想在多线程中执行多个查询或更新，你应该使用该类，这是线程安全的</p>
-<h1 id="FMDatabase">FMDatabase</h1><p><strong>数据库创建</strong></p>
-<p>创建FMDatabase对象时参数为SQLite数据库文件路径。该文件路径无需真实存在，如果不存在会自动创建</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line"><span class="built_in">NSString</span> *docDir = [paths objectAtIndex:<span class="number">0</span>]; </span><br><span class="line"><span class="built_in">NSString</span> *dataBasePath = [docDir stringByAppendingPathExtension:<span class="string">@"tataBase.db"</span>];</span><br><span class="line">FMDatabase *db = [FMDatabase databaseWithPath:dataBasePath];</span><br></pre></td></tr></table></figure>
-<p><strong>打开数据库</strong></p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (![<span class="keyword">db</span> <span class="keyword">open</span>]) &#123;</span><br><span class="line">        NSLog(@<span class="string">"Could not open db."</span>);</span><br><span class="line">        <span class="keyword">return</span> 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>执行更新</strong></p>
-<ul>
-<li>executeUpdate</li>
-</ul>
-<p>一切不是SELECT命令的命令都视为更新。这包括  CREATE, UPDATE, INSERT,ALTER等。简单来说，只要不是以SELECT开头的命令都是UPDATE命令</p>
-<p>执行更新返回一个BOOL值。YES表示执行成功，NO表示有错误。你可以调用 -lastErrorMessage 和 -lastErrorCode方法来得到更多信息。以插入操作举例：</p>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[db executeUpdate:@<span class="string">"INSERT INTO PersonList(Name, Age, Sex, Phone, Address, Photo) VALUES (?,?,?,?,?,?)"</span>,@<span class="string">"Jone"</span>, <span class="collection">[NSNumber numberWithInt:20]</span>, <span class="collection">[NSNumber numberWithInt:0]</span>, @“<span class="number">091234567</span>”, @“Taiwan, R.O.C”, <span class="collection">[NSData dataWithContentsOfFile: filepath]</span>]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p><strong>执行查询</strong></p>
-<ul>
-<li>executeQuery</li>
-</ul>
-<p>SELECT命令就是查询操作</p>
-<p>执行查询时，如果成功返回<strong>FMResultSet</strong>对象，错误返回nil</p>
-<p>与执行更新相同，也可以使用 -lastErrorCode和-lastErrorMessage获知错误信息</p>
-<p>获得FMResultSet对象rs后，即使只有一条记录，一样要使用[rs next];</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FMResultSet *rs = [db <span class="string">executeQuery:</span>@<span class="string">"SELECT Name, Age, FROM PersonList"</span>];</span><br><span class="line"><span class="keyword">while</span> ([rs next]) &#123;</span><br><span class="line">	NSString *name = [rs <span class="string">stringForColumn:</span>@<span class="string">"Name"</span>];</span><br><span class="line">	<span class="typename">int</span> age = [rs <span class="string">intForColumn:</span>@<span class="string">"Age"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>FMResultSet根据类型提取数据的方法:</p>
-<pre><code>-<span class="ruby"> <span class="symbol">intForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">longForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">nlongLongIntForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">boolForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">doubleForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">stringForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">dateForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">dataForColumn:</span>
-</span>-<span class="ruby"> <span class="symbol">dataNoCopyForColumn:</span>
-</span>-<span class="ruby"> <span class="constant">UTF8StringForColumnName</span><span class="symbol">:</span>
-</span>-<span class="ruby"> <span class="symbol">objectForColumnName:</span></span>
-</code></pre><p><code>以上这些方法，都有个{type}ForColumnIndex:版本，根据colum的位置来提取数据</code>    </p>
-<p>有些时候，只是需要query某一个row里特定的一个数值（比如只是要找John的年龄），FMDB提供了几个比较简便的方法。这些方法定义在FMDatabaseAdditions.h，如果要使用，记得先import进来</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//找地址</span><br><span class="line">NSString *address = [db stringForQuery:@"<span class="operator"><span class="keyword">SELECT</span> Address <span class="keyword">FROM</span> PersonList <span class="keyword">WHERE</span> Name = ?<span class="string">",@"</span>John”];</span></span><br><span class="line">//找年齡</span><br><span class="line">int age = [db intForQuery:@"<span class="operator"><span class="keyword">SELECT</span> Age <span class="keyword">FROM</span> PersonList <span class="keyword">WHERE</span> Name = ?<span class="string">",@"</span>John”];</span></span><br></pre></td></tr></table></figure>
-<p>使用完数据库，[FMDatabase close]，关闭数据库连接来释放SQLite使用的资源</p>
-<p><strong>批量操作</strong></p>
-<p>使用FMDatabase 的executeStatements:或者executeStatements:withResultBlock:（是否需要返回结果）</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSString *sql = @"<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> bulktest1 (id <span class="built_in">integer</span> <span class="keyword">primary</span> <span class="keyword">key</span> autoincrement, x <span class="built_in">text</span>);</span>"</span><br><span class="line">                 "<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> bulktest2 (id <span class="built_in">integer</span> <span class="keyword">primary</span> <span class="keyword">key</span> autoincrement, y <span class="built_in">text</span>);</span>"</span><br><span class="line">                 "<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> bulktest3 (id <span class="built_in">integer</span> <span class="keyword">primary</span> <span class="keyword">key</span> autoincrement, z <span class="built_in">text</span>);</span>"</span><br><span class="line">                 "<span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> bulktest1 (x) <span class="keyword">values</span> (<span class="string">'XXX'</span>);</span>"</span><br><span class="line">                 "<span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> bulktest2 (y) <span class="keyword">values</span> (<span class="string">'YYY'</span>);</span>"</span><br><span class="line">                 "<span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> bulktest3 (z) <span class="keyword">values</span> (<span class="string">'ZZZ'</span>);</span>";</span><br><span class="line"></span><br><span class="line">success = [db executeStatements:sql];</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sql = @"<span class="operator"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> <span class="keyword">from</span> bulktest1;</span>"</span><br><span class="line">       "<span class="operator"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> <span class="keyword">from</span> bulktest2;</span>"</span><br><span class="line">       "<span class="operator"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">as</span> <span class="keyword">count</span> <span class="keyword">from</span> bulktest3;</span>";</span><br><span class="line"></span><br><span class="line">success = [self.db executeStatements:sql withResultBlock:^int(NSDictionary *dictionary) &#123;</span><br><span class="line">    NSInteger count = [dictionary[@"count"] integerValue];</span><br><span class="line">    XCTAssertEqual(count, 1, @"expected one record for dictionary %@", dictionary);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p><strong>绑定参数</strong></p>
-<p>INSERT INTO myTable VALUES (?, ?, ?)</p>
-<p>问号只是占位，执行操作可以使用NSArray, NSDictionary, or a va_list来匹配参数</p>
-<p>你也可以选择使用命名参数语法：INSERT INTO myTable VALUES (:id, :name, :value) </p>
-<p>参数名必须以冒名开头。SQLite本身支持其他字符（$,@），Dictionary key的内部实现是冒号开头。注意你的NSDictionary key不要包含冒号</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary *argsDict = @&#123;@<span class="string">"name"</span>:@<span class="string">"Jason"</span>&#125;;</span><br><span class="line">    [db <span class="string">executeUpdate:</span>@<span class="string">"INSERT INTO myTable VALUES (:name)"</span> <span class="string">withParameterDictionary:</span>argsDict];</span><br></pre></td></tr></table></figure>
-<p><strong>FMDatabaseQueue 及线程安全</strong></p>
-<p><code>不能使用同一个FMDatabase在不同线程中操作，多线程的操作是通过FMDatabaseQueue实现</code></p>
-<p>首先创建队列，然后把单任务包装到事务里，串行执行</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FMDatabaseQueue *queue = [FMDatabaseQueue <span class="string">databaseQueueWithPath:</span>aPath]; </span><br><span class="line">[queue <span class="string">inDatabase:</span>^(FMDatabase *db) &#123;    </span><br><span class="line">          [db <span class="string">executeUpdate:</span>@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, [NSNumber <span class="string">numberWithInt:</span><span class="number">1</span>]];    </span><br><span class="line">          [db <span class="string">executeUpdate:</span>@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, [NSNumber <span class="string">numberWithInt:</span><span class="number">2</span>]];    </span><br><span class="line">          [db <span class="string">executeUpdate:</span>@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, [NSNumber <span class="string">numberWithInt:</span><span class="number">3</span>]];    </span><br><span class="line">          FMResultSet *rs = [db <span class="string">executeQuery:</span>@<span class="string">"select * from foo"</span>];    </span><br><span class="line">         <span class="keyword">while</span>([rs next]) &#123;   </span><br><span class="line">            …    </span><br><span class="line">         &#125;    </span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
-<p>事务的回滚：（当前的队列的操作的取消）</p>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[queue inTransaction:^<span class="list">(<span class="keyword">FMDatabase</span> *db, BOOL *rollback)</span> <span class="collection">&#123;    </span><br><span class="line">            <span class="collection">[db executeUpdate:@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, <span class="collection">[NSNumber numberWithInt:1]</span>]</span><span class="comment">;    </span></span><br><span class="line">            <span class="collection">[db executeUpdate:@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, <span class="collection">[NSNumber numberWithInt:2]</span>]</span><span class="comment">;    </span></span><br><span class="line">            <span class="collection">[db executeUpdate:@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, <span class="collection">[NSNumber numberWithInt:3]</span>]</span><span class="comment">;    </span></span><br><span class="line">            if <span class="list">(<span class="keyword">whoopsSomethingWrongHappened</span>)</span> <span class="collection">&#123;    </span><br><span class="line">                    *rollback = YES; </span><br><span class="line">                    return;    </span><br><span class="line">            &#125;</span>   </span><br><span class="line">            // etc…    </span><br><span class="line">            <span class="collection">[db executeUpdate:@<span class="string">"INSERT INTO myTable VALUES (?)"</span>, <span class="collection">[NSNumber numberWithInt:4]</span>]</span><span class="comment">;    </span></span><br><span class="line">    &#125;</span>]</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p><em>FMDatabaseQueue会在同一个队列里<code>同步</code>执行任务， GCD也会按它接收的块的顺序来执行</em></p>
-
+<p><img src="example.jpg" alt=""></p>
+<blockquote>
+<p>此图中距顶的约束是10, 距底的约束8, 距左边约束是87,距右边的约束是13, 那么systemLayoutSizeFittingSize:返回的CGSize为height等于19, size等于100. 它UITextView的frame是不影响systemLayoutSizeFittingSize:的计算。所以，需要加上textViewSize.height</p>
+</blockquote>
+<h3 id="Manual_Layout-1">Manual Layout</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C4 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C4"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    [cell<span class="variable">.t</span> sizeToFit]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C4 *cell = (C4 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    <span class="built_in">NSString</span> *str = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = str; </span><br><span class="line">    <span class="built_in">CGSize</span> s =  [cell<span class="variable">.t</span> sizeThatFits:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX)]; </span><br><span class="line">    <span class="built_in">CGFloat</span> defaultHeight = cell<span class="variable">.contentView</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.height</span>; </span><br><span class="line">    <span class="built_in">CGFloat</span> height = s<span class="variable">.height</span> &gt; defaultHeight ? s<span class="variable">.height</span> : defaultHeight; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + height; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="ci96n68av0006ylk6c5sru9jh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="ci9bakso20006vvk6rzesa7c9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -641,6 +726,10 @@
 
 
   
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </section>
         
@@ -656,7 +745,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -666,6 +755,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/微博之数据存储/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2015/微博项目之首页/">微博项目之首页</a>
@@ -681,10 +774,6 @@
         
           <li>
             <a href="/2015/FmdbDemo/">FmdbDemo</a>
-          </li>
-        
-          <li>
-            <a href="/2015/多媒体采集/">多媒体采集</a>
           </li>
         
       </ul>
