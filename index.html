@@ -65,10 +65,83 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-多人合作Git管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/多人合作Git管理/" class="article-date">
+  <time datetime="2015-05-15T06:52:07.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/多人合作Git管理/">多人合作Git管理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/多人合作Git管理/" data-id="ci9p8ztl2000765k6ms29ustb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-微博之微博详情" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博之微博详情/" class="article-date">
+  <time datetime="2015-05-10T09:36:28.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: “微博之微博详情”<br>date: 2015-05-10 14:21:54</p>
+<h2 id="微博详情">微博详情</h2><p>微博详情就是每一条微博点击进入，展示微博的具体内容。<br>难点：  </p>
+<ul>
+<li><p>两个页面的传值<br>怎么让选择一条微博就会跳入对应的微博详情页面。   </p>
+</li>
+<li><p>详情界面的结构<br>详情界面不是一个简单的tableView  </p>
+</li>
+<li>微博内容下面有评论，转发，点赞的内容，这几个table之间怎么跳转。  </li>
+</ul>
+<p>—<br>首先页面间传值的方法有以下几种：  </p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>KVO</span><br><span class="line"><span class="number">2.</span>属性传值（最基本的方法）</span><br><span class="line"><span class="number">3.</span>通知中心</span><br><span class="line"><span class="number">4.</span>接续（storyBoad控制器之间连接的那个点）  </span><br><span class="line"><span class="number">5.</span>block块</span><br><span class="line">```    </span><br><span class="line">在这次的微博详情中传值可以用属性传值：    </span><br><span class="line"></span><br><span class="line">``` </span><br><span class="line">  -(<span class="keyword">void</span>)tableView:(<span class="built_in">UITableView</span> *)tableView didSelectRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath&#123;</span><br><span class="line">    StatusModel *stModel = <span class="keyword">self</span><span class="variable">.arraySt</span>[indexPath<span class="variable">.section</span>];</span><br><span class="line">    StatusDetails *details = [[StatusDetails alloc] init];</span><br><span class="line">    details<span class="variable">.status</span> = stModel;</span><br><span class="line">    [<span class="keyword">self</span><span class="variable">.navigationController</span> pushViewController:details animated:<span class="literal">NO</span>];</span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">还可以用接续：    </span><br><span class="line"></span><br><span class="line">```  </span><br><span class="line">- (<span class="keyword">void</span>)prepareForSegue:(<span class="built_in">UIStoryboardSegue</span> *)segue sender:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">//把cell对应的indexpath取出来</span></span><br><span class="line">    <span class="built_in">NSIndexPath</span> *indexPath = [<span class="keyword">self</span><span class="variable">.tableView</span> indexPathForCell:sender];</span><br><span class="line">    StatusDetails *details = [[StatusDetails alloc] init]; </span><br><span class="line">    <span class="comment">//目标控制器</span></span><br><span class="line">    details = segue<span class="variable">.destinationViewController</span>;</span><br><span class="line">    <span class="comment">//将要显示的微博</span></span><br><span class="line">    StatusModel *stModel = <span class="keyword">self</span><span class="variable">.arraySt</span>[indexPath<span class="variable">.section</span>];</span><br><span class="line">    details<span class="variable">.status</span> = stModel;</span><br><span class="line">    <span class="comment">//让首页显示的tabBar消失</span></span><br><span class="line">    <span class="keyword">self</span><span class="variable">.hidesBottomBarWhenPushed</span> = <span class="literal">YES</span>;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博之微博详情/" data-id="ci9p8ztkw000565k6jywipo6t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-微博之数据存储" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/微博之数据存储/" class="article-date">
-  <time datetime="2015-05-04T02:14:56.000Z" itemprop="datePublished">2015</time>
+  <time datetime="2015-05-06T12:42:41.000Z" itemprop="datePublished">2015</time>
 </a>
     
   </div>
@@ -98,13 +171,13 @@
 <li>字段的类型<br>前面说过这个一条微博是一个字典，一条微博中有很多参数，每个参数可以作为数据库中的一个字段，但是用户信息的参数又是一个字典，还有转发微博也是一个字典，所以可以像图片的存储那样转换成data类型存起来。这里要用到的方法就是把字典归档。<code>archivedDataWithRootObject:</code></li>
 </ul>
 </li>
-<li></li>
+<li>创建一个类<br> 这个类主要是用来处理数据库，增删改查。</li>
 </ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博之数据存储/" data-id="ci9bazai400044hk6jqh20xhz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博之数据存储/" data-id="ci9p8ztkv000465k6hauvdmbo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -159,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci9bazai100024hk6dce0pbei" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博项目之首页/" data-id="ci9p8ztks000265k68wwk4rcp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -235,7 +308,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci9bazah200004hk6lisa5dig" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/面试题/" data-id="ci9p8ztkh000065k6vhm4wj8i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -296,7 +369,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci9bazaif000a4hk6jgarkswl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/AFNetWorking/" data-id="ci9p8ztl9000c65k6vzodozg4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -335,7 +408,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci9bazaib00084hk66p5gao6w" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/FmdbDemo/" data-id="ci9p8ztl7000a65k6v5f2f2nk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -396,7 +469,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci9bazai600054hk6n6n9ul76" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/多媒体采集/" data-id="ci9p8ztl0000665k6501qkd20" class="article-share-link">Share</a>
       
       
     </footer>
@@ -456,7 +529,7 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="ci9bazai300034hk6x6napge1" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="ci9p8ztku000365k666bdi6cg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -506,217 +579,7 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci9bazaia00074hk66tg6azku" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-数据解析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/数据解析/" class="article-date">
-  <time datetime="2015-01-20T03:31:10.000Z" itemprop="datePublished">2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/数据解析/">数据解析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="XML_&amp;_JSON">XML &amp; JSON</h1><h1 id="XML">XML</h1><h2 id="SAX解析">SAX解析</h2><ol>
-<li><p>创建XML解析对象</p>
- <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSURL</span> *fileURL = [[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@"bookstore"</span> withExtension:<span class="string">@"xml"</span>];</span><br><span class="line"><span class="built_in">NSXMLParser</span> *xmlParser = [[<span class="built_in">NSXMLParser</span> alloc] initWithContentsOfURL:fileURL];</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li>设置XML解析对象的代理</li>
-<li><p>开始解析</p>
- <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">BOOL</span> flag = [xmlParser parse];</span><br><span class="line">   <span class="keyword">if</span> (!flag) &#123;</span><br><span class="line">       <span class="built_in">NSLog</span>(<span class="string">@"xmlParser parse error."</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<hr>
-<p>NSXMLParser对象代理方法：</p>
-<ul>
-<li><p>(void)parserDidStartDocument:(NSXMLParser *)parser </p>
-<blockquote>
-<p>当开始解析XML文档的时候，调用这个方法。通常在这个方法里，<code>创建存储模型对象的数组</code></p>
-</blockquote>
-</li>
-<li><p>(void)parser:(NSXMLParser <em>)parser didStartElement:(NSString </em>)elementName namespaceURI:(NSString <em>)namespaceURI qualifiedName:(NSString </em>)qName attributes:(NSDictionary *)attributeDict </p>
-<blockquote>
-<p>当开始解析，遇到元素的开始标签的时候，调用这个方法。通常在这个方法里，<code>创建模型对象或解析标签中的属性保存在模型对象中</code></p>
-</blockquote>
-</li>
-<li><p>(void)parser:(NSXMLParser <em>)parser foundCharacters:(NSString </em>)string</p>
-<blockquote>
-<p>当解析到xml标签的文本内容的时候，调用这个方法, 通常在这里先<code>暂存解析到的文本内容</code></p>
-</blockquote>
-</li>
-<li><p>(void)parser:(NSXMLParser <em>)parser didEndElement:(NSString </em>)elementName namespaceURI:(NSString <em>)namespaceURI qualifiedName:(NSString </em>)qName</p>
-<blockquote>
-<p>当解析xml内容遇到结束标签的时候，调用这个方法。通常在这个方法里，<code>需要将模型对象保存入数组中或把标签对应的文本内容解析出来，保存在模型对象中（KVC）</code></p>
-</blockquote>
-</li>
-<li><p>(void)parserDidEndDocument:(NSXMLParser *)parser</p>
-<blockquote>
-<p>当整个xml文档全部解析结束的时候，该方法会被调用</p>
-</blockquote>
-</li>
-<li><p>(void)parser:(NSXMLParser <em>)parser parseErrorOccurred:(NSError </em>)parseError</p>
-<blockquote>
-<p>当遇到解析错误时，该方法会被调用</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="DOM解析_(以GDataXMLNode为例)">DOM解析 (以GDataXMLNode为例)</h2><p>使用:</p>
-<p>添加头文件搜索路径：<br><code>Build Settings-&gt;Header Search Paths-&gt;&quot;/usr/include/libxml2&quot;</code></p>
-<p>用非ARC的方式编译GDataXMLNode.m文件：<br><code>-fno-objc-arc</code></p>
-<p>链接libxml2.dylib该动态库：<br><code>Build Phases-&gt;Link Binary With Libraries-&gt;&quot;libxml2.dylib&quot;</code></p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">*</span></span><br><span class="line">    <span class="keyword">*</span> <span class="variable">&lt;节点&gt;</span> (GDataXMLNode)</span><br><span class="line">    <span class="keyword">*</span> 根据 DOM，XML 文档中的每个成分都是一个节点。</span><br><span class="line">    <span class="keyword">*</span> DOM 是这样规定的：</span><br><span class="line">    <span class="keyword">*</span> 整个文档是一个文档节点</span><br><span class="line">    <span class="keyword">*</span> 每个 XML 标签是一个元素节点</span><br><span class="line">    <span class="keyword">*</span> 包含在 XML 元素中的文本是文本节点</span><br><span class="line">    <span class="keyword">*</span> 每一个 XML 属性是一个属性节点</span><br><span class="line">    <span class="keyword">*</span> 注释属于注释节点</span><br><span class="line">    <span class="keyword">*</span>/</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>根据XML文件创建NSData对象</p>
- <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSURL</span> *fileURL = [[<span class="built_in">NSBundle</span> mainBundle] URLForResource:<span class="string">@"bookstore"</span> withExtension:<span class="string">@"xml"</span>];</span><br><span class="line">   <span class="built_in">NSData</span> *data = [<span class="built_in">NSData</span> dataWithContentsOfURL:fileURL];</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol>
-<li><p>根据NSData对象创建GDataXMLDocument对象（即DOM模型对象），该对象在内存中是以树形结构存储的</p>
- <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GDataXMLDocument *doc = [[GDataXMLDocument alloc] <span class="string">initWithData:</span>data <span class="string">options:</span><span class="number">0</span> <span class="string">error:</span>nil];</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过DOM模型对象，取出XML文件的根元素</p>
- <figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">GDataXMLElement *rootElement </span>=<span class="string"> [doc rootElement];</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>由于是树形结构，所以，可以根据子元素的名字使用根元素获取到所有子元素，并类推获得子元素的子元素</p>
- <figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="atom">for</span> (<span class="name">GDataXMLElement</span> *<span class="atom">element</span> <span class="atom">in</span> <span class="atom">elements</span>) &#123;</span><br><span class="line">       // 创建图书对象</span><br><span class="line">       <span class="name">YMBook</span> *<span class="atom">book</span> = [[<span class="name">YMBook</span> <span class="atom">alloc</span>] <span class="atom">init</span>];</span><br><span class="line">       </span><br><span class="line">       // 根据属性名字，解析<span class="atom">book</span>元素的属性值</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">category</span> = [[<span class="atom">element</span> <span class="atom">attributeForName</span>:<span class="atom">kCategory</span>] <span class="atom">stringValue</span>];</span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       // 解析<span class="atom">book</span>的子元素包含的文本内容及其子元素的属性</span><br><span class="line">       <span class="name">GDataXMLElement</span> *<span class="atom">titleElement</span> = [<span class="atom">element</span> <span class="atom">elementsForName</span>:<span class="atom">kTitle</span>][<span class="number">0</span>];</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">title</span> = [<span class="atom">titleElement</span> <span class="atom">stringValue</span>];</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">lang</span> = [[<span class="atom">titleElement</span> <span class="atom">attributeForName</span>:<span class="atom">kLanguage</span>] <span class="atom">stringValue</span>];</span><br><span class="line">       </span><br><span class="line">       <span class="name">GDataXMLElement</span> *<span class="atom">authorElement</span> = [<span class="atom">element</span> <span class="atom">elementsForName</span>:<span class="atom">kAuthor</span>][<span class="number">0</span>];</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">author</span> = [<span class="atom">authorElement</span> <span class="atom">stringValue</span>];</span><br><span class="line">       </span><br><span class="line">       <span class="name">GDataXMLElement</span> *<span class="atom">yearElement</span> = [<span class="atom">element</span> <span class="atom">elementsForName</span>:<span class="atom">kYear</span>][<span class="number">0</span>];</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">year</span> = [<span class="atom">yearElement</span> <span class="atom">stringValue</span>];</span><br><span class="line">       </span><br><span class="line">       <span class="name">GDataXMLElement</span> *<span class="atom">priceElement</span> = [<span class="atom">element</span> <span class="atom">elementsForName</span>:<span class="atom">kPrice</span>][<span class="number">0</span>];</span><br><span class="line">       <span class="atom">book</span>.<span class="atom">price</span> = [<span class="atom">priceElement</span> <span class="atom">stringValue</span>];</span><br><span class="line">       </span><br><span class="line">       [<span class="name">_bookStore</span> <span class="atom">addObject</span>:<span class="atom">book</span>];</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="JSON">JSON</h1><p>从结构上看，所有的数据（data）最终都可以分解成三种类型：</p>
-<ul>
-<li>第一种类型是标量（scalar），也就是一个单独的字符串（string）或数字（numbers），比如”北京”这个单独的词</li>
-<li>第二种类型是序列（sequence），也就是若干个相关的数据按照一定顺序并列在一起，又叫做数组（array）或列表（List），比如”北京，上海”</li>
-<li>第三种类型是映射（mapping），也就是一个名/值对（Name/value），即数据有一个名称，还有一个与之相对应的值，这又称作散列（hash）或字典（dictionary），比如”首都：北京”</li>
-</ul>
-<p>Douglas Crockford发明了JSON，Json的规定非常简单:</p>
-<ol>
-<li>并列的数据之间用逗号（”, “）分隔</li>
-<li>映射用冒号（”: “）表示</li>
-<li>并列数据的集合（数组）用方括号(“[]”)表示</li>
-<li>映射的集合（对象）用大括号（”{}”）表示</li>
-</ol>
-<p>比如，下面这句话：</p>
-<blockquote>
-<p>“北京市的面积为16800平方公里，常住人口1600万人。上海市的面积为6400平方公里，常住人口1800万。”</p>
-</blockquote>
-<p>写成JSON格式就是这样：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">　　&#123;"<span class="attribute">城市</span>":<span class="value"><span class="string">"北京"</span></span>,"<span class="attribute">面积</span>":<span class="value"><span class="number">16800</span></span>,"<span class="attribute">人口</span>":<span class="value"><span class="number">1600</span></span>&#125;,</span><br><span class="line">　　&#123;"<span class="attribute">城市</span>":<span class="value"><span class="string">"上海"</span></span>,"<span class="attribute">面积</span>":<span class="value"><span class="number">6400</span></span>,"<span class="attribute">人口</span>":<span class="value"><span class="number">1800</span></span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>如果事先知道数据的结构，上面的写法还可以进一步简化：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">　　[<span class="string">"北京"</span>,<span class="number">16800</span>,<span class="number">1600</span>],</span><br><span class="line">　　[<span class="string">"上海"</span>,<span class="number">6400</span>,<span class="number">1800</span>]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p><em><code>rfc-4627</code></em></p>
-<p><em><code>www.json.org/json-zh.htm</code></em></p>
-<p><em><code>www.sojson.com</code></em></p>
-<h2 id="NSJSONSerialization">NSJSONSerialization</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">id</span>)JSONObjectWithData:(<span class="built_in">NSData</span> *)data</span><br><span class="line">                options:(<span class="built_in">NSJSONReadingOptions</span>)opt</span><br><span class="line">                  error:(<span class="built_in">NSError</span> **)error</span><br><span class="line">                  </span><br><span class="line">+ (<span class="built_in">NSData</span> *)dataWithJSONObject:(<span class="keyword">id</span>)obj</span><br><span class="line">                      options:(<span class="built_in">NSJSONWritingOptions</span>)opt</span><br><span class="line">                        error:(<span class="built_in">NSError</span> **)error</span><br></pre></td></tr></table></figure>
-<h2 id="JSONKit">JSONKit</h2><p>使用：<br><code>-fno-objc-arc</code></p>
-<p>序列化: <code>NSArray</code> <code>NSDictionary</code> <code>NSString</code></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">– JSONData</span><br><span class="line">– <span class="string">JSONDataWithOptions:</span><span class="string">includeQuotes:</span><span class="string">error:</span></span><br><span class="line">- <span class="string">JSONDataWithOptions:</span><span class="string">serializeUnsupportedClassesUsingDelegate:</span><span class="string">selector:</span><span class="string">error:</span></span><br><span class="line">- <span class="string">JSONDataWithOptions:</span><span class="string">serializeUnsupportedClassesUsingBlock:</span><span class="string">error:</span></span><br><span class="line"></span><br><span class="line">– JSONString</span><br><span class="line">– <span class="string">JSONStringWithOptions:</span><span class="string">includeQuotes:</span><span class="string">error:</span></span><br><span class="line">- <span class="string">JSONStringWithOptions:</span><span class="string">serializeUnsupportedClassesUsingDelegate:</span><span class="string">selector:</span><span class="string">error:</span></span><br><span class="line">– <span class="string">JSONStringWithOptions:</span><span class="string">serializeUnsupportedClassesUsingBlock:</span><span class="string">error:</span></span><br></pre></td></tr></table></figure>
-<p>反序列化: <code>NSData</code> <code>NSString</code></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">– objectFromJSONData</span><br><span class="line">– <span class="string">objectFromJSONDataWithParseOptions:</span></span><br><span class="line">– <span class="string">objectFromJSONDataWithParseOptions:</span><span class="string">error:</span></span><br><span class="line">– mutableObjectFromJSONData</span><br><span class="line">– <span class="string">mutableObjectFromJSONDataWithParseOptions:</span></span><br><span class="line">– <span class="string">mutableObjectFromJSONDataWithParseOptions:</span><span class="string">error:</span></span><br><span class="line"></span><br><span class="line">– objectFromJSONString</span><br><span class="line">– <span class="string">objectFromJSONStringWithParseOptions:</span></span><br><span class="line">– <span class="string">objectFromJSONStringWithParseOptions:</span><span class="string">error:</span></span><br><span class="line">– mutableObjectFromJSONString</span><br><span class="line">– <span class="string">mutableObjectFromJSONStringWithParseOptions:</span></span><br><span class="line">– <span class="string">mutableObjectFromJSONStringWithParseOptions:</span><span class="string">error:</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="ci9bazaht00014hk6hcy0wjvf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-动态计算cell高度" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2015/动态计算cell高度/" class="article-date">
-  <time datetime="2015-01-02T02:57:19.000Z" itemprop="datePublished">2015</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/动态计算cell高度/">动态计算cell高度</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="动态计算UITableViewCell高度">动态计算UITableViewCell高度</h1><h2 id="UILabel_in_UITableViewCell">UILabel in UITableViewCell</h2><h3 id="Auto_Layout">Auto Layout</h3><ul>
-<li><p>UILabel的属性Lines设为了0表示显示多行。Auto Layout约束一定要建立完完整</p>
-</li>
-<li><p>UITableView使用C1.xib中自定义的Cell,那么我们需要向UITableView进行注册</p>
-</li>
-</ul>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UINib *cellNib = [UINib <span class="string">nibWithNibName:</span>@<span class="string">"C1"</span> <span class="string">bundle:</span>nil]; </span><br><span class="line">[self.tableView <span class="string">registerNib:</span>cellNib <span class="string">forCellReuseIdentifier:</span>@<span class="string">"C1"</span>];</span><br></pre></td></tr></table></figure>
-<ul>
-<li>数据源方法</li>
-</ul>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSInteger</span>)tableView:(<span class="built_in">UITableView</span> *)tableView numberOfRowsInSection:(<span class="built_in">NSInteger</span>)section </span><br><span class="line">&#123; </span><br><span class="line">    <span class="comment">// Return the number of rows in the section. </span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span><span class="variable">.tableData</span><span class="variable">.count</span>; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C1 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C1"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>需要用到一个新的API systemLayoutSizeFittingSize:来计算UITableViewCell所占空间高度。Cell的高度是在- (CGFloat)tableView:(UITableView )tableView heightForRowAtIndexPath:(NSIndexPath )indexPath这个UITableViewDelegate的方法里面传给UITableView的。</p>
-</li>
-<li><p>这里有一个需要特别注意的问题，也就是<code>效率</code>问题。UITableView是一次性计算完所有Cell的高度，如果有1W个Cell，那么- (CGFloat)tableView:(UITableView )tableView heightForRowAtIndexPath:(NSIndexPath )indexPath就会触发1W次，然后才显示内容。不过在iOS7以后，提供了一个新方法可以避免这1W次调用，它就是- (CGFloat)tableView:(UITableView )tableView estimatedHeightForRowAtIndexPath:(NSIndexPath )indexPath。要求返回一个Cell的估计值，实现了这个方法，那只有显示的Cell才会触发计算高度的protocol. 由于systemLayoutSizeFittingSize需要cell的一个实例才能计算，所以这儿用一个成员变量存一个Cell的实列，这样就不需要每次计算Cell高度的时候去动态生成一个Cell实例，这样即方便也高效也少用内存，可谓一举三得。</p>
-</li>
-<li>声明一个存计算Cell高度的实例变量</li>
-</ul>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UITableViewCell</span> *prototypeCell;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>初始化prototypeCell</li>
-</ul>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">self</span>.prototypeCell  = [<span class="literal">self</span>.<span class="built_in">table</span>View dequeueReusableCellWithIdentifier:@<span class="string">"C1"</span>];</span><br></pre></td></tr></table></figure>
-<ul>
-<li>计算Cell高度的实现</li>
-</ul>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C1 *cell = (C1 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>]; </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, size<span class="variable">.height</span> + <span class="number">1</span>); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + size<span class="variable">.height</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>UITableViewCell的高度要比它的contentView要高1,也就是它的分隔线的高度</li>
-</ul>
-<h3 id="Manual_Layout">Manual Layout</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C3 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C3"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    [cell<span class="variable">.t</span> sizeToFit]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C3 *cell = (C3 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    <span class="built_in">NSString</span> *str = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = str; </span><br><span class="line">    <span class="built_in">CGSize</span> s = [str calculateSize:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX) font:cell<span class="variable">.t</span><span class="variable">.font</span>]; </span><br><span class="line">    <span class="built_in">CGFloat</span> defaultHeight = cell<span class="variable">.contentView</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.height</span>; </span><br><span class="line">    <span class="built_in">CGFloat</span> height = s<span class="variable">.height</span> &gt; defaultHeight ? s<span class="variable">.height</span> : defaultHeight; </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, height); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + height; </span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// NSString的类别</span></span><br><span class="line">- (<span class="built_in">CGSize</span>)calculateSize:(<span class="built_in">CGSize</span>)size font:(<span class="built_in">UIFont</span> *)font &#123; </span><br><span class="line">    <span class="built_in">CGSize</span> expectedLabelSize = <span class="built_in">CGSizeZero</span>; </span><br><span class="line">     </span><br><span class="line">    <span class="keyword">if</span> ([[[<span class="built_in">UIDevice</span> currentDevice] systemVersion] floatValue] &gt;= <span class="number">7</span>) &#123; </span><br><span class="line">        <span class="built_in">NSMutableParagraphStyle</span> *paragraphStyle = [[<span class="built_in">NSMutableParagraphStyle</span> alloc] init]; </span><br><span class="line">        paragraphStyle<span class="variable">.lineBreakMode</span> = <span class="built_in">NSLineBreakByWordWrapping</span>; </span><br><span class="line">        <span class="built_in">NSDictionary</span> *attributes = @&#123;<span class="built_in">NSFontAttributeName</span>:font, <span class="built_in">NSParagraphStyleAttributeName</span>:paragraphStyle<span class="variable">.copy</span>&#125;; </span><br><span class="line">         </span><br><span class="line">        expectedLabelSize = [<span class="keyword">self</span> boundingRectWithSize:size options:<span class="built_in">NSStringDrawingUsesLineFragmentOrigin</span> attributes:attributes context:<span class="literal">nil</span>]<span class="variable">.size</span>; </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">        expectedLabelSize = [<span class="keyword">self</span> sizeWithFont:font </span><br><span class="line">                                       constrainedToSize:size </span><br><span class="line">                                           lineBreakMode:<span class="built_in">NSLineBreakByWordWrapping</span>]; </span><br><span class="line">    &#125; </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGSizeMake</span>(ceil(expectedLabelSize<span class="variable">.width</span>), ceil(expectedLabelSize<span class="variable">.height</span>)); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="UITextView_in_UITableViewCell">UITextView in UITableViewCell</h2><h3 id="Auto_Layout-1">Auto Layout</h3><ul>
-<li>计算高度的代码</li>
-</ul>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C2 *cell = (C2 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>]; </span><br><span class="line">    <span class="built_in">CGSize</span> textViewSize = [cell<span class="variable">.t</span> sizeThatFits:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX)]; </span><br><span class="line">    <span class="built_in">CGFloat</span> h = size<span class="variable">.height</span> + textViewSize<span class="variable">.height</span>; </span><br><span class="line">    h = h &gt; <span class="number">89</span> ? h : <span class="number">89</span>;  <span class="comment">//89是图片显示的最低高度， 见xib </span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"h=%f"</span>, h); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> + h; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>说明：</code>通过sizeThatFits:计算的UITextView的高度(这是计算UITextView内容全部显示时的方法)，然后加上systemLayoutSizeFittingSize:返回的高度。为什么要这样呢？ 因为UITextView内容的高度不会影响systemLayoutSizeFittingSize计算。</p>
-</blockquote>
-<p><img src="example.jpg" alt=""></p>
-<blockquote>
-<p>此图中距顶的约束是10, 距底的约束8, 距左边约束是87,距右边的约束是13, 那么systemLayoutSizeFittingSize:返回的CGSize为height等于19, size等于100. 它UITextView的frame是不影响systemLayoutSizeFittingSize:的计算。所以，需要加上textViewSize.height</p>
-</blockquote>
-<h3 id="Manual_Layout-1">Manual Layout</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath </span><br><span class="line">&#123; </span><br><span class="line">    C4 *cell = [<span class="keyword">self</span><span class="variable">.tableView</span> dequeueReusableCellWithIdentifier:<span class="string">@"C4"</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    [cell<span class="variable">.t</span> sizeToFit]; </span><br><span class="line">    <span class="keyword">return</span> cell; </span><br><span class="line">&#125; </span><br><span class="line">  </span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123; </span><br><span class="line">    C4 *cell = (C4 *)<span class="keyword">self</span><span class="variable">.prototypeCell</span>; </span><br><span class="line">    <span class="built_in">NSString</span> *str = [<span class="keyword">self</span><span class="variable">.tableData</span> objectAtIndex:indexPath<span class="variable">.row</span>]; </span><br><span class="line">    cell<span class="variable">.t</span><span class="variable">.text</span> = str; </span><br><span class="line">    <span class="built_in">CGSize</span> s =  [cell<span class="variable">.t</span> sizeThatFits:<span class="built_in">CGSizeMake</span>(cell<span class="variable">.t</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.width</span>, FLT_MAX)]; </span><br><span class="line">    <span class="built_in">CGFloat</span> defaultHeight = cell<span class="variable">.contentView</span><span class="variable">.frame</span><span class="variable">.size</span><span class="variable">.height</span>; </span><br><span class="line">    <span class="built_in">CGFloat</span> height = s<span class="variable">.height</span> &gt; defaultHeight ? s<span class="variable">.height</span> : defaultHeight; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>  + height; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="ci9bazai700064hk61e7qm2j4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="ci9p8ztl5000965k671q1eo6j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -745,7 +608,7 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -757,6 +620,14 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
       <ul>
         
           <li>
+            <a href="/2015/多人合作Git管理/">多人合作Git管理</a>
+          </li>
+        
+          <li>
+            <a href="/2015/微博之微博详情/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2015/微博之数据存储/">(no title)</a>
           </li>
         
@@ -766,14 +637,6 @@ StatusModel *models = <span class="keyword">self</span><span class="variable">.a
         
           <li>
             <a href="/2015/面试题/">面试题</a>
-          </li>
-        
-          <li>
-            <a href="/2015/AFNetWorking/">AFNetWorking</a>
-          </li>
-        
-          <li>
-            <a href="/2015/FmdbDemo/">FmdbDemo</a>
           </li>
         
       </ul>
