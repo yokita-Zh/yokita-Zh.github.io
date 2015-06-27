@@ -3,17 +3,38 @@
 <head>
   <meta charset="utf-8">
   
-  <title>韩流圈之个人中心 | YoKi’s Blog</title>
+  <title>地图之路线 | YoKi’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="韩流圈项目为合作开发，四人共同开发，分为四个部分，我抓哟负责个人中心的模块和整体架构的设计。">
+  <meta name="description" content="地图之路线地图有很多知识点，具体实现runpath需要这几个类
+  CLLocationManager  主要是用来管理位置信息的设置一些属性，控制位置的更新和停止  
+  QYAnnotation（自定义注释层）    
+  #import &amp;lt;Foundation/Foundation.h&amp;gt;
+  #import &amp;lt;MapKit/MapKit.h&amp;gt;
+
+
+typedef en">
 <meta property="og:type" content="article">
-<meta property="og:title" content="韩流圈之个人中心">
-<meta property="og:url" content="http://yoursite.com/2015/韩流圈之个人中心/index.html">
+<meta property="og:title" content="地图之路线">
+<meta property="og:url" content="http://yoursite.com/2015/地图之路线/index.html">
 <meta property="og:site_name" content="YoKi’s Blog">
-<meta property="og:description" content="韩流圈项目为合作开发，四人共同开发，分为四个部分，我抓哟负责个人中心的模块和整体架构的设计。">
+<meta property="og:description" content="地图之路线地图有很多知识点，具体实现runpath需要这几个类
+  CLLocationManager  主要是用来管理位置信息的设置一些属性，控制位置的更新和停止  
+  QYAnnotation（自定义注释层）    
+  #import &amp;lt;Foundation/Foundation.h&amp;gt;
+  #import &amp;lt;MapKit/MapKit.h&amp;gt;
+
+
+typedef en">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="韩流圈之个人中心">
-<meta name="twitter:description" content="韩流圈项目为合作开发，四人共同开发，分为四个部分，我抓哟负责个人中心的模块和整体架构的设计。">
+<meta name="twitter:title" content="地图之路线">
+<meta name="twitter:description" content="地图之路线地图有很多知识点，具体实现runpath需要这几个类
+  CLLocationManager  主要是用来管理位置信息的设置一些属性，控制位置的更新和停止  
+  QYAnnotation（自定义注释层）    
+  #import &amp;lt;Foundation/Foundation.h&amp;gt;
+  #import &amp;lt;MapKit/MapKit.h&amp;gt;
+
+
+typedef en">
   
     <link rel="alternative" href="/atom.xml" title="YoKi’s Blog" type="application/atom+xml">
   
@@ -63,10 +84,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-韩流圈之个人中心" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-地图之路线" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/韩流圈之个人中心/" class="article-date">
-  <time datetime="2015-05-25T09:34:13.000Z" itemprop="datePublished">2015</time>
+    <a href="/2015/地图之路线/" class="article-date">
+  <time datetime="2015-10-27T12:09:19.000Z" itemprop="datePublished">2015</time>
 </a>
     
   </div>
@@ -77,7 +98,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      韩流圈之个人中心
+      地图之路线
     </h1>
   
 
@@ -85,12 +106,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>韩流圈项目为合作开发，四人共同开发，分为四个部分，我抓哟负责个人中心的模块和整体架构的设计。  </p>
+        <h2 id="地图之路线">地图之路线</h2><p>地图有很多知识点，具体实现runpath需要这几个类</p>
+<p>  CLLocationManager<br>  主要是用来管理位置信息的设置一些属性，控制位置的更新和停止  </p>
+<p>  QYAnnotation（自定义注释层）    </p>
+<pre><code>  <span class="preprocessor">#import <span class="title">&lt;Foundation/Foundation.h&gt;</span></span>
+  <span class="preprocessor">#import <span class="title">&lt;MapKit/MapKit.h&gt;</span></span>
 
+
+<span class="keyword">typedef</span> <span class="keyword">enum</span>{
+    kAnnotationGo,
+    kAnnotationSuspend,
+    kAnnotationEnd,
+    kAnnotutionNow
+} kAnnotationType;
+
+<span class="comment">//实现MKAnnotaion协议的对象</span>
+<span class="class"><span class="keyword">@interface</span> <span class="title">QYAnnotation</span> : <span class="title">NSObject</span>&lt;<span class="title">MKAnnotation</span>&gt;</span>
+
+<span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) CLLocationCoordinate2D coordinate;<span class="comment">//实现MkAnnotaion协议</span>
+
+
+<span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) kAnnotationType type;<span class="comment">//区分不同的点</span>
+
+-(<span class="keyword">void</span>)setCoordinate:(CLLocationCoordinate2D)newCoordinate;
+-(<span class="keyword">void</span>)getCoordinate;
+
+<span class="keyword">@end</span>
+</code></pre><p>  设置CLLocationManagerDelegate和MKMapViewDelegate代理方法使的实现     </p>
+<p><code>-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{}</code>  </p>
+<p><code>-(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id&lt;MKAnnotation&gt;)annotation{ }</code></p>
+<p> 用来画线的     </p>
+<pre><code>-(<span class="built_in">MKOverlayRenderer</span> *)mapView:(<span class="built_in">MKMapView</span> *)mapView rendererForOverlay:(<span class="keyword">id</span>&lt;<span class="built_in">MKOverlay</span>&gt;)overlay{<span class="keyword">if</span> ([overlay isKindOfClass:[<span class="built_in">MKPolyline</span> class]]) {  
+       <span class="built_in">MKPolylineRenderer</span> *renderer = [[<span class="built_in">MKPolylineRenderer</span> alloc] initWithPolyline:overlay];
+       renderer<span class="variable">.lineWidth</span>=<span class="number">3.</span>f;
+       renderer<span class="variable">.strokeColor</span> = [<span class="built_in">UIColor</span> redColor];
+       <span class="keyword">return</span> renderer;   
+   } 
+   <span class="keyword">return</span> <span class="literal">nil</span>;}
+</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/韩流圈之个人中心/" data-id="cibf0mon00000esk638oj3k5q" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/地图之路线/" data-id="cibf0monn0009esk6wktihbxa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -99,19 +156,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/地图之路线/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          地图之路线
-        
-      </div>
-    </a>
   
-  
-    <a href="/2015/微博之相对位置/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/韩流圈之个人中心/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">微博之相对位置</div>
+      <div class="article-nav-title">韩流圈之个人中心</div>
     </a>
   
 </nav>

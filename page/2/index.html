@@ -65,6 +65,66 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-微博之自动布局" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/微博之自动布局/" class="article-date">
+  <time datetime="2015-02-04T02:53:34.000Z" itemprop="datePublished">2015</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/微博之自动布局/">微博之自动布局</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="自动布局">自动布局</h3><p>在微博的首页显示中，每条微博是一个cell，每条微博的cell的高度都不是确定的，因为每条微博的内容都是不一样的有大有小，所以想要cell的大小随文字的多少显示就需要动态布局，计算出cell的高度，之前发过有关动态计算cell高度的博文，这次值针对于微博的项目来演示如何动态的显示出博客的内容。<br>动态计算高度有两种：一种是手动计算，一种是使用autoLayout。本次微博使用的是autoLayout自动计算高度，相对简单一些。下面是计算的步骤。  </p>
+<ul>
+<li><p>首先按照微博的格式把该添加的控件添加上。  </p>
+<p>  <img src="http://ww2.sinaimg.cn/mw690/919f5105jw1ertmu898c4j20hu09amxl.jpg =250x" alt="Mou icon">  </p>
+<ul>
+<li><p>逐个加上对应的约束<br><img src="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7wmifj20i0070aaf.jpg =250x" alt="Mou icon"><br><code>这里需要注意的是要把整个cell撑起来，垂直方向要加够约束，约束与约束的关系要清晰</code><br>由于xcode的版本有些不同加完约束后还有勾选一下内容：<br><img src="http://ww3.sinaimg.cn/mw690/919f5105jw1ertmu7gbcej20ek05mmxe.jpg =250x" alt="Mou icon">      </p>
+<p>还有：  </p>
+<p><img src="http://ww1.sinaimg.cn/small/919f5105jw1ertn6mht4tj20ek06m3zq.jpg =250x" alt="Mou icon"> <code>我的xcode6.1.1默认是两个都勾选，只需要勾选第一个</code>  </p>
+</li>
+</ul>
+<p>界面的内容就完成了，下面进入对应的控制器添加上代码。  </p>
+<ul>
+<li>计算cell高度的算法</li>
+</ul>
+</li>
+</ul>
+<pre><code> -(<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath{
+StatusCell *cell =  <span class="keyword">self</span><span class="variable">.proptCell</span>;
+StatusModel *models = <span class="keyword">self</span><span class="variable">.arraySt</span>[indexPath<span class="variable">.section</span>];
+[cell setStatueseModel:models];
+<span class="built_in">CGSize</span> size = [cell<span class="variable">.contentView</span> systemLayoutSizeFittingSize:<span class="built_in">UILayoutFittingCompressedSize</span>];
+<span class="keyword">return</span> size<span class="variable">.height</span> + <span class="number">1</span>;  
+}  
+</code></pre><p>  <code>这时得注意这个最后加个1是微博的线的高度，如果没有就显示不全</code><br>  如果有错误提示是高度一直为0 有可能是约束加的不对，还有上面说的勾选的内容勾选的不对。反正看着简单，做起来也需要很细心才行。<br>  <img src="http://25.io/mou/Mou_128.png" alt="Mou icon"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/微博之自动布局/" data-id="cibf0monh0004esk6g0w7jou4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-使用新浪微博API" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2015/使用新浪微博API/" class="article-date">
@@ -105,7 +165,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="cibf04ua4000b3bk6shmrot6m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="cibf0mont000desk624no8h3m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +297,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="cibf04u9q00023bk6ba36tm6a" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="cibf0mond0002esk6ak2os8fn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -315,7 +375,48 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="cibf04ua2000a3bk68own9vjs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="cibf0mons000cesk6dzrz09lw" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-同步之barrier" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/同步之barrier/" class="article-date">
+  <time datetime="2014-12-27T12:11:45.000Z" itemprop="datePublished">2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/同步之barrier/">同步之barrier</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>同步异步影响的什么  </p>
+<p>异步在执行的时候出现耗时操作就运行下一项不等待，  </p>
+<p>同步是必须等待，所以没有dispatch_barrier_async的必要<br>这个例子是在有些时候有的任务必须在其他几个任务完成之后进行，前几个任务是前提。<br>如下的例子是在前两个任务完成后才能进行第三个任务，因为是一个并发的队列，而且都是异步加载的，所以每个任务的先后完成时间是不一定的，同时开始，但先后不一定，如果只想要第三个任务在前两个任务完成后在进行可以用<code>dispatch_barrier_async</code>  后面的任务执行先后也不确定，所以可以确定的只有第三个任务是第三个完成的。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (IBAction)startProcess<span class="value">:(id)sender &#123;</span><br><span class="line">  dispatch_queue_t queue = <span class="function">dispatch_queue_create</span>(<span class="string">"com.hnqingyun.gcd"</span>, DISPATCH_QUEUE_CONCURRENT);</span></span><br><span class="line">  </span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:1]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"First job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:2]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Sec job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="function">dispatch_barrier_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:1]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Third job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">  <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"XXX"</span>);</span></span><br><span class="line">  </span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:1]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Fourth job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:1]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Fifth job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:1]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Sixth job"</span>);</span></span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="function">dispatch_async</span>(queue, ^&#123;</span><br><span class="line">      <span class="attr_selector">[NSThread sleepForTimeInterval:2]</span>;</span><br><span class="line">      <span class="function">NSLog</span>(<span class="at_rule">@<span class="string">"Seventh job"</span>);</span></span><br><span class="line">  &#125;);   &#125;</span><br></pre></td></tr></table></figure>
+<p>  根据执行的顺序加入<code>NSLog(@&quot;XXX&quot;);</code>后<br>    异步时  会先执行 NSLog(@”XXX”);</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2014/同步之barrier/" data-id="cibf0monp000aesk6m6goipvl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -353,7 +454,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/单例/" data-id="cibf04ua000093bk6wbs00a3z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/单例/" data-id="cibf0monr000besk61bve79cl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -455,7 +556,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="cibf04ua6000d3bk6cyycks75" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="cibf0mony000fesk6q4pqvxal" class="article-share-link">Share</a>
       
       
     </footer>
@@ -484,7 +585,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -494,6 +595,10 @@
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/地图之路线/">地图之路线</a>
+          </li>
         
           <li>
             <a href="/2015/韩流圈之个人中心/">韩流圈之个人中心</a>
@@ -509,10 +614,6 @@
         
           <li>
             <a href="/2015/微博之数据存储/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2015/微博项目之首页/">微博项目之首页</a>
           </li>
         
       </ul>
