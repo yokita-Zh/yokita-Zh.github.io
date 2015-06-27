@@ -105,7 +105,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="cibezwis3000axqk63dzo192d" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/使用新浪微博API/" data-id="cibf04ua4000b3bk6shmrot6m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/数据解析/" data-id="cibezwiro0002xqk6dyucxv72" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/数据解析/" data-id="cibf04u9q00023bk6ba36tm6a" class="article-share-link">Share</a>
       
       
     </footer>
@@ -315,7 +315,45 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="cibezwis10009xqk6t5ksk27s" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/动态计算cell高度/" data-id="cibf04ua2000a3bk68own9vjs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-单例" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/单例/" class="article-date">
+  <time datetime="2014-09-27T12:05:05.000Z" itemprop="datePublished">2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/单例/">单例</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="单例的设计_dispatch_once的用法">单例的设计  dispatch_once的用法</h1><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">+ (instancetype)sharedInstance</span><br><span class="line">&#123;</span><br><span class="line"><span class="preprocessor">#if 0</span></span><br><span class="line">    <span class="keyword">static</span> QYSomeClass *manager;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (manager == <span class="literal">nil</span>) &#123;</span><br><span class="line">        <span class="comment">// 创建</span></span><br><span class="line">        [<span class="built_in">NSThread</span> sleepForTimeInterval:<span class="number">3</span>];</span><br><span class="line">        manager = [[QYSomeClass alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> QYSomeClass *manager;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> once;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;once, ^&#123;</span><br><span class="line">        [<span class="built_in">NSThread</span> sleepForTimeInterval:<span class="number">3</span>];</span><br><span class="line">        manager = [[QYSomeClass alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> manager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行时  </p>
+  <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)startProcess:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</span><br><span class="line">        QYSomeClass *manager1 = [QYSomeClass sharedInstance];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"manager1:%@"</span>, manager1);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</span><br><span class="line">        QYSomeClass *manager2 = [QYSomeClass sharedInstance];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"manager2:%@"</span>, manager2);</span><br><span class="line">        </span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</span><br><span class="line">        QYSomeClass *manager3 = [QYSomeClass sharedInstance];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"manager3:%@"</span>, manager3);</span><br><span class="line">        </span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</span><br><span class="line">        QYSomeClass *manager4 = [QYSomeClass sharedInstance];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"manager4:%@"</span>, manager4);</span><br><span class="line">        </span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2014/单例/" data-id="cibf04ua000093bk6wbs00a3z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,7 +455,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2014/FMDB/" data-id="cibezwis5000cxqk6hpsmzblw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2014/FMDB/" data-id="cibf04ua6000d3bk6cyycks75" class="article-share-link">Share</a>
       
       
     </footer>
@@ -446,7 +484,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">May 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">April 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">February 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">January 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">April 2014</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
